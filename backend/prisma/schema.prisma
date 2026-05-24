@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  photo     String?
+  role      String   @default("CUSTOMER") // "ADMIN" ou "CUSTOMER"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  name            String
+  price           String
+  originalPrice   String?
+  sku             String?
+  image           String
+  image2          String?
+  image3          String?
+  image4          String?
+  listCategory    String   @default("newreleases")
+  tags            String   // Armazenaremos como JSON.stringify([...])
+  wholesalePrices String?  // Armazenaremos como JSON.stringify([...])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  type      String   // "site" ou "product"
+  productId String?  // Se type == "product", salva o ID do produto
+  text      String
+  rating    Int
+  name      String
+  photo     String?
+  createdAt DateTime @default(now())
+}
+
+model Banner {
+  id        Int      @id @default(autoincrement())
+  cat       String
+  img       String
+  createdAt DateTime @default(now())
+}
+
+model StoreSettings {
+  id          Int      @id @default(1)
+  phone       String
+  whatsapp    String
+  email       String
+  hours       String
+  description String
+  instagram   String
+  facebook         String
+  melhorEnvioToken String? // Token de API do Melhor Envio
+  originCep        String? // CEP de origem da loja
+  updatedAt        DateTime @updatedAt
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  userId        String?
+  totalAmount   Float
+  status        String
+  paymentMethod String
+  paymentId     String?
+  items         String   // JSON string com os produtos comprados
+  shippingFee   Float    @default(0)
+  address       String?  // JSON string com rua, numero, cep, etc
+  createdAt     DateTime @default(now())
+}

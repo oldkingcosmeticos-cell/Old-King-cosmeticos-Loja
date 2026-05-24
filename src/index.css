@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bebas Neue", cursive;
+
+  --color-primary: #e9c176;
+  --color-on-primary: #412d00;
+  --color-primary-container: #c5a059;
+  
+  --color-background: #131313;
+  --color-surface: #1f1f1f;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #393939;
+  
+  --spacing-margin-desktop: 64px;
+  --spacing-margin-mobile: 16px;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-white antialiased;
+  }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.inner-glow {
+  box-shadow: inset 1px 1px 0px 0px rgba(197, 160, 89, 0.2);
+}
+
+.golden-thread {
+  background: linear-gradient(90deg, transparent 0%, #C5A059 50%, transparent 100%);
+  height: 1px;
+}

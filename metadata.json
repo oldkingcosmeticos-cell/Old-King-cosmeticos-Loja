@@ -1,0 +1,6 @@
+{
+  "name": "Old King Cosméticos",
+  "description": "Premium male grooming products including pomades, shampoos, and beard care with a luxury cinematic noir aesthetic.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

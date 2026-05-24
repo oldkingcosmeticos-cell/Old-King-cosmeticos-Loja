@@ -1,0 +1,42 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
+import paymentRoutes from './routes/payment.routes';
+import authRoutes from './routes/auth.routes';
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+import userRoutes from './routes/user.routes';
+import productRoutes from './routes/product.routes';
+import bannerRoutes from './routes/banner.routes';
+import settingsRoutes from './routes/settings.routes';
+import reviewRoutes from './routes/review.routes';
+import orderRoutes from './routes/order.routes';
+import shippingRoutes from './routes/shipping.routes';
+
+// Rotas estáticas
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Rotas da API
+app.use('/api', paymentRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/shipping', shippingRoutes);
+
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor backend rodando na porta ${PORT}`);
+});
