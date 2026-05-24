@@ -269,7 +269,7 @@ const ProductDetailsView = ({ product, onBack, onAddToCart, isFavorite, onToggle
     if (cep.length < 8) return;
     setFreteResult('⏳ Calculando frete...');
     try {
-      const res = await fetch('http://localhost:3001/api/shipping/calculate', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/shipping/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cep })
@@ -507,7 +507,7 @@ const AccountView = ({ user, onBack, formData, setFormData, handleProfileUpdate 
       try {
         const token = localStorage.getItem('oldking_token');
         if (!token) return;
-        const res = await fetch('http://localhost:3001/api/orders/my-orders', {
+        const res = await fetch(import.meta.env.VITE_API_URL + '/api/orders/my-orders', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -721,7 +721,7 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('oldking_token');
-      const res = await fetch('http://localhost:3001/api/users', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/users', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -745,7 +745,7 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
   const handleToggleAdmin = async (userId: string) => {
     try {
       const token = localStorage.getItem('oldking_token');
-      const res = await fetch(`http://localhost:3001/api/users/${userId}/role`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}/role`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -862,7 +862,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
     
     setLoadingCep(true);
     try {
-      const res = await fetch('http://localhost:3001/api/shipping/calculate', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/shipping/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cep: cleanCep })
@@ -1030,7 +1030,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                   }}
                   onSubmit={async (param) => {
                     try {
-                      const res = await fetch('http://localhost:3001/api/checkout', {
+                      const res = await fetch(import.meta.env.VITE_API_URL + '/api/checkout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1047,7 +1047,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                           
                           // Salva o pedido como PENDENTE no banco de dados para aparecer no painel
                           try {
-                            await fetch('http://localhost:3001/api/orders', {
+                            await fetch(import.meta.env.VITE_API_URL + '/api/orders', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({
@@ -1068,7 +1068,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                         } else {
                           // Registra no nosso BD oficial
                           try {
-                            await fetch('http://localhost:3001/api/orders', {
+                            await fetch(import.meta.env.VITE_API_URL + '/api/orders', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({
@@ -1364,31 +1364,31 @@ export default function App() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/products');
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/products');
       if (res.ok) {
         const data = await res.json();
         setAllProducts(data);
         setBestSellers(data.filter((p: any) => p.listCategory === 'bestsellers'));
         setNewReleases(data.filter((p: any) => p.listCategory === 'newreleases'));
       }
-      const resB = await fetch('http://localhost:3001/api/banners');
+      const resB = await fetch(import.meta.env.VITE_API_URL + '/api/banners');
       if (resB.ok) setBanners(await resB.json());
 
-      const resR = await fetch('http://localhost:3001/api/reviews');
+      const resR = await fetch(import.meta.env.VITE_API_URL + '/api/reviews');
       if (resR.ok) {
         const dataR = await resR.json();
         setSiteReviews(dataR.filter((r: any) => r.type === 'site'));
         setProductReviews(dataR.filter((r: any) => r.type === 'product'));
       }
 
-      const resS = await fetch('http://localhost:3001/api/settings');
+      const resS = await fetch(import.meta.env.VITE_API_URL + '/api/settings');
       if (resS.ok) {
         const dataS = await resS.json();
         setFooterConfig(dataS);
         setFooterForm(dataS);
       }
 
-      const resO = await fetch('http://localhost:3001/api/orders');
+      const resO = await fetch(import.meta.env.VITE_API_URL + '/api/orders');
       if (resO.ok) setOrders(await resO.json());
     } catch (err) {
       console.error('Erro ao buscar dados:', err);
@@ -1534,7 +1534,7 @@ export default function App() {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:3001/api/auth/send-code', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/auth/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, code })
@@ -1558,7 +1558,7 @@ export default function App() {
     if (!reviewMode) return;
     
     try {
-      const res = await fetch('http://localhost:3001/api/reviews', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1586,7 +1586,7 @@ export default function App() {
     if (!window.confirm('Tem certeza que deseja excluir esta avaliação?')) return;
     try {
       const token = localStorage.getItem('oldking_token');
-      const res = await fetch(`http://localhost:3001/api/reviews/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -1625,7 +1625,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch('http://localhost:3001/api/auth/register', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1664,7 +1664,7 @@ export default function App() {
     e.preventDefault();
     
     try {
-      const res = await fetch('http://localhost:3001/api/auth/login', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1710,7 +1710,7 @@ export default function App() {
     if (window.confirm(`Tem certeza que deseja excluir "${product.name}"?`)) {
       try {
         const token = localStorage.getItem('oldking_token');
-        const res = await fetch(`http://localhost:3001/api/products/${product.id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${product.id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -1731,7 +1731,7 @@ export default function App() {
 
     try {
       const token = localStorage.getItem('oldking_token');
-      const res = await fetch(`http://localhost:3001/api/products/${editingProduct.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${editingProduct.id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -1757,7 +1757,7 @@ export default function App() {
     
     try {
       const token = localStorage.getItem('oldking_token');
-      const res = await fetch('http://localhost:3001/api/products', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/products', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -1781,7 +1781,7 @@ export default function App() {
     if (window.confirm('Tem certeza que deseja excluir este destaque?')) {
       try {
         const token = localStorage.getItem('oldking_token');
-        const res = await fetch(`http://localhost:3001/api/banners/${banner.id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/banners/${banner.id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -1797,8 +1797,8 @@ export default function App() {
     try {
       const token = localStorage.getItem('oldking_token');
       const url = authMode === 'editBanner' && editingBanner 
-        ? `http://localhost:3001/api/banners/${editingBanner.id}` 
-        : 'http://localhost:3001/api/banners';
+        ? `${import.meta.env.VITE_API_URL}/api/banners/${editingBanner.id}` 
+        : import.meta.env.VITE_API_URL + '/api/banners';
       const method = authMode === 'editBanner' ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -2135,7 +2135,7 @@ export default function App() {
         <OrdersPanel orders={orders} onStatusChange={async (id: string, status: string) => {
           try {
             const token = localStorage.getItem('oldking_token');
-            const res = await fetch(`http://localhost:3001/api/orders/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
               body: JSON.stringify({ status })
@@ -2454,7 +2454,7 @@ export default function App() {
                     Não recebeu? <button type="button" onClick={() => {
                       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
                       setGeneratedCode(newCode);
-                      fetch('http://localhost:3001/api/auth/send-code', {
+                      fetch(import.meta.env.VITE_API_URL + '/api/auth/send-code', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: formData.email, code: newCode })
@@ -2738,7 +2738,7 @@ export default function App() {
                   e.preventDefault();
                   try {
                     const token = localStorage.getItem('oldking_token');
-                    const res = await fetch('http://localhost:3001/api/settings', {
+                    const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings', {
                       method: 'PUT',
                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                       body: JSON.stringify(footerForm)
