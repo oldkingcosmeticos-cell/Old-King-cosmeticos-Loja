@@ -67,7 +67,7 @@ export class AuthController {
       // Define como admin se for o e-mail do dono
       const role = email.toLowerCase() === 'caioh0455@gmail.com' ? 'ADMIN' : 'CUSTOMER';
       
-      const processedPhoto = ImageService.processImage(photo) || photo;
+      const processedPhoto = await ImageService.processImage(photo) || photo;
 
       const newUser = await prisma.user.create({
         data: {

@@ -21,7 +21,7 @@ export class PaymentController {
       // Envia o e-mail com o QR Code se for PIX
       if (paymentResponse.payment_method_id === 'pix' && customer?.email) {
         // Envia de forma assíncrona para não travar a resposta da API
-        EmailService.sendPaymentPendingEmail(customer.email, paymentResponse.point_of_interaction.transaction_data).catch(console.error);
+        EmailService.sendPaymentPendingEmail(customer.email, paymentResponse.point_of_interaction?.transaction_data).catch(console.error);
       }
       
       res.status(200).json({ 

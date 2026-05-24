@@ -19,7 +19,7 @@ export class BannerController {
   static async create(req: Request, res: Response) {
     try {
       const { cat, img } = req.body;
-      const processedImg = ImageService.processImage(img) || img;
+      const processedImg = await ImageService.processImage(img) || img;
       const newBanner = await prisma.banner.create({
         data: { cat, img: processedImg }
       });
@@ -33,7 +33,7 @@ export class BannerController {
     try {
       const { id } = req.params;
       const { cat, img } = req.body;
-      const processedImg = ImageService.processImage(img) || img;
+      const processedImg = await ImageService.processImage(img) || img;
       const updated = await prisma.banner.update({
         where: { id: Number(id) },
         data: { cat, img: processedImg }
