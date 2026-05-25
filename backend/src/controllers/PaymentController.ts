@@ -18,7 +18,14 @@ export class PaymentController {
       // Persistência do pedido com os itens e o cliente para a emissão futura da NF
       let totalAmount = 0;
       if (items && items.length > 0) {
-        totalAmount = items.reduce((acc: number, item: any) => acc + (item.unit_price * item.quantity), 0);
+        totalAmount = items.reduce((acc: number, item: any) => {
+          let price = item.unit_price;
+          if (typeof price === 'string') {
+            price = Number(price.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+          }
+          if (isNaN(price)) price = 0;
+          return acc + (price * item.quantity);
+        }, 0);
       } else if (paymentData.transaction_amount) {
         totalAmount = paymentData.transaction_amount;
       }
@@ -46,9 +53,9 @@ export class PaymentController {
         message: 'Pagamento processado com sucesso', 
         paymentResponse 
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro no checkout:', error);
-      res.status(500).json({ success: false, message: 'Erro interno no servidor ao processar pagamento' });
+      res.status(500).json({ success: false, message: error?.message || 'Erro desconhecido ao processar pagamento' });
     }
   }
 

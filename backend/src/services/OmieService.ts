@@ -53,10 +53,10 @@ export class OmieService {
         },
         produto: {
           codigo_produto: item.product?.sku ? Number(item.product.sku) : 0,
-          codigo_produto_integracao: item.product?.sku ? "" : (item.id || item.product?.id),
+          codigo_produto_integracao: item.product?.sku ? "" : String(item.id || item.product?.id),
           descricao: item.title || item.product?.name,
           quantidade: item.quantity,
-          valor_unitario: Number(item.unit_price || item.product?.price?.replace('R$ ', '').replace('.', '').replace(',', '.'))
+          valor_unitario: typeof item.unit_price === 'string' ? Number(item.unit_price.replace('R$ ', '').replace(/\./g, '').replace(',', '.')) : Number(item.unit_price || 0)
         }
       }));
 
