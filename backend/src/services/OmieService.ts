@@ -84,7 +84,8 @@ export class OmieService {
         id: item.id,
         title: item.title,
         quantity: item.quantity,
-        unit_price: item.unit_price
+        unit_price: item.unit_price,
+        price: item.price
       }));
 
       // Busca os códigos internos dos produtos na Omie
