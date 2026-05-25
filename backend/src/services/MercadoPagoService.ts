@@ -11,7 +11,7 @@ export class MercadoPagoService {
       const payment = new Payment(client);
       
       // Injeta a URL de webhook para a produção (Render)
-      const webhookUrl = process.env.VITE_API_URL ? `${process.env.VITE_API_URL}/api/payments/webhook` : 'https://oldking-backend.onrender.com/api/payments/webhook';
+      const webhookUrl = 'https://old-king-cosmeticos-loja.onrender.com/api/payments/webhook';
       
       const bodyWithWebhook = {
         ...paymentData,
