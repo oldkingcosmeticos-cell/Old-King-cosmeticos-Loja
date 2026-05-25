@@ -20,29 +20,58 @@ export class OmieService {
       if (!cleanCpf) throw new Error("CPF não fornecido no checkout, impossível integrar com a Omie.");
 
       console.log(`[OMIE] 1. Sincronizando cliente CPF: ${cleanCpf}`);
-      const clientPayload = {
-        call: 'UpsertCliente',
-        app_key,
-        app_secret,
-        param: [{
-          codigo_cliente_integracao: cleanCpf,
-          email: customer.email,
-          razao_social: customer.name,
-          nome_fantasia: customer.name,
-          cnpj_cpf: cleanCpf,
-          telefone1_numero: customer.phone,
-          endereco: customer.street,
-          endereco_numero: customer.number,
-          bairro: customer.neighborhood,
-          complemento: customer.complement || '',
-          estado: customer.state,
-          cidade: customer.city,
-          cep: customer.cep
-        }]
-      };
+      let codigo_cliente_omie = 0;
 
-      const clientResponse = await axios.post('https://app.omie.com.br/api/v1/geral/clientes/', clientPayload);
-      const codigo_cliente_omie = clientResponse.data.codigo_cliente_omie;
+      try {
+        // Primeiro tenta buscar o cliente para ver se ele já existe na Omie
+        const searchPayload = {
+          call: 'ListarClientes',
+          app_key,
+          app_secret,
+          param: [{
+            pagina: 1,
+            registros_por_pagina: 10,
+            clientesFiltro: {
+              cnpj_cpf: cleanCpf
+            }
+          }]
+        };
+        const searchRes = await axios.post('https://app.omie.com.br/api/v1/geral/clientes/', searchPayload);
+        if (searchRes.data.clientes_cadastro && searchRes.data.clientes_cadastro.length > 0) {
+          codigo_cliente_omie = searchRes.data.clientes_cadastro[0].codigo_cliente_omie;
+          console.log(`[OMIE] Cliente já existia na base. ID: ${codigo_cliente_omie}`);
+        }
+      } catch (e) {
+        // Ignora erro de busca
+      }
+
+      if (codigo_cliente_omie === 0) {
+        // Se não achou, cria um novo
+        const clientPayload = {
+          call: 'UpsertCliente',
+          app_key,
+          app_secret,
+          param: [{
+            codigo_cliente_integracao: cleanCpf,
+            email: customer.email,
+            razao_social: customer.name,
+            nome_fantasia: customer.name,
+            cnpj_cpf: cleanCpf,
+            telefone1_numero: customer.phone,
+            endereco: customer.street,
+            endereco_numero: customer.number,
+            bairro: customer.neighborhood,
+            complemento: customer.complement || '',
+            estado: customer.state,
+            cidade: customer.city,
+            cep: customer.cep
+          }]
+        };
+
+        const clientResponse = await axios.post('https://app.omie.com.br/api/v1/geral/clientes/', clientPayload);
+        codigo_cliente_omie = clientResponse.data.codigo_cliente_omie;
+        console.log(`[OMIE] Cliente cadastrado com sucesso! ID Omie: ${codigo_cliente_omie}`);
+      }
       
       console.log(`[OMIE] Cliente sincronizado com sucesso! ID Omie: ${codigo_cliente_omie}`);
 
