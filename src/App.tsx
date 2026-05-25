@@ -2086,7 +2086,7 @@ export default function App() {
       ) : currentView === 'product' ? (
         <ProductDetailsView 
           product={viewingProduct} 
-          onBack={() => setCurrentView('home')} 
+          onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           onAddToCart={handleAddToCart}
           isFavorite={favorites.includes(viewingProduct.id)}
           onToggleFavorite={handleToggleFavorite}
@@ -2097,7 +2097,7 @@ export default function App() {
           onDeleteReview={handleDeleteReview}
         />
       ) : currentView === 'users' && isAdmin ? (
-        <UsersView onBack={() => setCurrentView('home')} />
+        <UsersView onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} />
       ) : currentView === 'orders' && isAdmin ? (
         <OrdersPanel orders={orders} onStatusChange={async (id: string, status: string) => {
           try {
@@ -2113,11 +2113,11 @@ export default function App() {
               alert('Erro ao atualizar status');
             }
           } catch(err) { alert('Erro de conexão'); }
-        }} onBack={() => setCurrentView('home')} />
+        }} onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} />
       ) : currentView === 'account' && user ? (
         <AccountView 
           user={user} 
-          onBack={() => setCurrentView('home')} 
+          onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           formData={formData} 
           setFormData={setFormData} 
           handleProfileUpdate={handleProfileUpdate} 
@@ -2126,7 +2126,7 @@ export default function App() {
         <CategoryView 
           category={`Resultados para "${searchQuery}"`} 
           products={searchResults} 
-          onBack={() => setCurrentView('home')} 
+          onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           onBuy={(p: any) => { setViewingProduct(p); setCurrentView('product'); }}
           onEdit={(p: any) => {
             const isBestseller = bestSellers.find((b: any) => b.id === p.id);
@@ -2157,7 +2157,7 @@ export default function App() {
         <CategoryView 
           category="Meus Favoritos" 
           products={allProducts.filter(p => favorites.includes(p.id))} 
-          onBack={() => setCurrentView('home')} 
+          onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           onBuy={(p: any) => { setViewingProduct(p); setCurrentView('product'); }}
           onEdit={(p: any) => {
             const isBestseller = bestSellers.find((b: any) => b.id === p.id);
@@ -2187,7 +2187,7 @@ export default function App() {
       ) : currentView === 'institutional' ? (
         <div className="max-w-4xl mx-auto py-12 px-4 animate-in fade-in slide-in-from-bottom-4">
           <button 
-            onClick={() => setCurrentView('home')}
+            onClick={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }}
             className="flex items-center gap-2 text-gray-400 hover:text-primary transition-colors mb-8"
           >
             <ChevronLeft size={20} /> Voltar
@@ -2210,7 +2210,7 @@ export default function App() {
         <CategoryView 
           category={activeCategory} 
           products={[...bestSellers, ...newReleases]} 
-          onBack={() => setCurrentView('home')} 
+          onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           onBuy={(p: any) => { setViewingProduct(p); setCurrentView('product'); }}
           onEdit={(p: any) => {
             const isBestseller = bestSellers.find((b: any) => b.id === p.id);
@@ -2228,13 +2228,13 @@ export default function App() {
       ) : currentView === 'checkout' ? (
         <CheckoutView 
           cart={cart}
-          onBack={() => setCurrentView('home')} 
+          onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           user={user}
         />
       ) : currentView === 'institutional' ? (
         <div className="max-w-4xl mx-auto py-12 px-4 animate-in fade-in slide-in-from-bottom-4">
           <button 
-            onClick={() => setCurrentView('home')}
+            onClick={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }}
             className="flex items-center gap-2 text-gray-400 hover:text-primary transition-colors mb-8"
           >
             <ChevronLeft size={20} /> Voltar
@@ -2908,13 +2908,13 @@ export default function App() {
       {/* Cart Sidebar */}
       {isCartOpen && (
         <div className="fixed inset-0 z-[100] flex animate-in fade-in duration-200">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)} />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => { if(cart.length > 0) { if(window.confirm('Você deseja mesmo fechar o carrinho?')) setIsCartOpen(false); } else { setIsCartOpen(false); } }} />
           <div className="absolute top-0 right-0 w-full max-w-md h-full bg-surface border-l border-white/5 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
             <div className="flex items-center justify-between p-4 border-b border-white/5">
               <span className="font-bold text-xl text-primary flex items-center gap-2">
                 <ShoppingBag size={20} /> Seu Carrinho
               </span>
-              <button onClick={() => setIsCartOpen(false)} className="text-gray-400 hover:text-white transition-colors p-2">
+              <button onClick={() => { if(cart.length > 0) { if(window.confirm('Você deseja mesmo fechar o carrinho?')) setIsCartOpen(false); } else { setIsCartOpen(false); } }} className="text-gray-400 hover:text-white transition-colors p-2">
                 <X size={24} />
               </button>
             </div>
