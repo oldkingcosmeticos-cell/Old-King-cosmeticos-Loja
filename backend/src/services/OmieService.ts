@@ -140,7 +140,7 @@ export class OmieService {
             etapa: "10", // Voltando para a etapa 10 (gaveta segura)
             quantidade_itens: det.length
           },
-          det,
+          det: orderItems,
           frete: {
             modalidade: "9", // Sem frete ou frete por conta do emitente
             valor_frete: order.shippingFee || 0
