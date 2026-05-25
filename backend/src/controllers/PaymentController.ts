@@ -27,7 +27,8 @@ export class PaymentController {
         data: {
           userId: customer?.email || 'guest',
           status: 'pending',
-          total: totalAmount,
+          totalAmount: totalAmount,
+          paymentMethod: paymentResponse.payment_method_id || 'pix',
           paymentId: String(paymentResponse.id),
           items: JSON.stringify(items || []),
           address: JSON.stringify(customer || {})
