@@ -126,13 +126,16 @@ export class PaymentController {
       });
 
       if (order) {
+        let omieLogs = "";
         try {
           const customerData = order.address ? JSON.parse(order.address as string) : {};
           const itemsData = order.items ? JSON.parse(order.items as string) : [];
           
           await OmieService.registerOrder(order, customerData, itemsData);
+          omieLogs += "Omie Venda: OK. ";
           await OmieService.issueInvoice(order);
-        } catch (e) {
+        } catch (e: any) {
+          omieLogs += "Omie Error: " + (e.message || JSON.stringify(e));
           console.error("Erro ao integrar com a Omie no webhook de teste:", e);
         }
 
@@ -141,7 +144,7 @@ export class PaymentController {
           data: { status: 'approved' }
         });
 
-        res.status(200).send('Webhook de teste processado e pedido aprovado!');
+        res.status(200).json({ success: true, message: 'Webhook de teste processado!', omieLogs });
       } else {
         res.status(404).send('Pedido não encontrado no banco de dados.');
       }

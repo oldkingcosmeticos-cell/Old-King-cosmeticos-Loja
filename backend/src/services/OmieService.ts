@@ -95,8 +95,7 @@ export class OmieService {
       console.error("[OMIE ERROR] Falha ao integrar com a Omie:");
       console.error(error.response?.data?.faultstring || error.message);
       console.log("------------------------------------------");
-      return false; // Retornamos falso para não quebrar a venda do cliente, apenas a integração ERP falha
-    }
+      throw new Error(error.response?.data?.faultstring || error.message);
   }
 
   static async issueInvoice(order: any) {
