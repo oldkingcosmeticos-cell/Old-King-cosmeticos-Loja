@@ -81,8 +81,8 @@ export class OmieService {
           codigo_item_integracao: `${order.id.substring(0, 8)}-${index}`
         },
         produto: {
-          codigo_produto: item.product?.sku ? Number(item.product.sku) : 0,
-          codigo_produto_integracao: item.product?.sku ? "" : String(item.id || item.product?.id),
+          codigo_produto: 0,
+          codigo_produto_integracao: String(item.product?.sku || item.id || item.product?.id),
           descricao: item.title || item.product?.name,
           quantidade: item.quantity,
           valor_unitario: typeof item.unit_price === 'string' ? Number(item.unit_price.replace('R$ ', '').replace(/\./g, '').replace(',', '.')) : Number(item.unit_price || 0)
