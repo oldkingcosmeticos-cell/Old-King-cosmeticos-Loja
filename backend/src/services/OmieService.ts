@@ -121,7 +121,7 @@ export class OmieService {
             codigo_produto_integracao,
             descricao: item.title || item.product?.name,
             quantidade: item.quantity,
-            valor_unitario: typeof item.unit_price === 'string' ? Number(item.unit_price.replace('R$ ', '').replace(/\./g, '').replace(',', '.')) : Number(item.unit_price || 0)
+            valor_unitario: typeof (item.price || item.unit_price) === 'string' ? Number((item.price || item.unit_price).replace('R$ ', '').replace(/\./g, '').replace(',', '.')) : Number((item.price || item.unit_price) || 0)
           }
         });
       }
