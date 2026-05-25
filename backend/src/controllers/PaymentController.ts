@@ -115,4 +115,38 @@ export class PaymentController {
       res.status(500).send('Erro interno');
     }
   }
+
+  async testWebhook(req: Request, res: Response) {
+    try {
+      const { paymentId } = req.params;
+      console.log(`[TESTE] Simulando aprovação do pagamento ${paymentId}`);
+
+      const order = await prisma.order.findFirst({
+        where: { paymentId: String(paymentId) }
+      });
+
+      if (order) {
+        try {
+          const customerData = order.address ? JSON.parse(order.address as string) : {};
+          const itemsData = order.items ? JSON.parse(order.items as string) : [];
+          
+          await OmieService.registerOrder(order, customerData, itemsData);
+          await OmieService.issueInvoice(order);
+        } catch (e) {
+          console.error("Erro ao integrar com a Omie no webhook de teste:", e);
+        }
+
+        await prisma.order.update({
+          where: { id: order.id },
+          data: { status: 'approved' }
+        });
+
+        res.status(200).send('Webhook de teste processado e pedido aprovado!');
+      } else {
+        res.status(404).send('Pedido não encontrado no banco de dados.');
+      }
+    } catch (error) {
+      res.status(500).send('Erro interno');
+    }
+  }
 }
