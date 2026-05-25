@@ -113,6 +113,9 @@ export class OmieService {
           }
         }
 
+        const calcValor = typeof (item.product?.price || item.unit_price) === 'string' ? Number((item.product?.price || item.unit_price).replace('R$ ', '').replace(/\./g, '').replace(',', '.')) : Number((item.product?.price || item.unit_price) || 0);
+        console.log(`[OMIE DEBUG] item.product.price: ${item.product?.price}, item.unit_price: ${item.unit_price}, valor calculado: ${calcValor}`);
+
         orderItems.push({
           ide: {
             codigo_item_integracao: `${order.id.substring(0, 8)}-${index}`
@@ -122,7 +125,7 @@ export class OmieService {
             codigo_produto_integracao,
             descricao: item.title || item.product?.name,
             quantidade: item.quantity,
-            valor_unitario: typeof (item.product?.price || item.unit_price) === 'string' ? Number((item.product?.price || item.unit_price).replace('R$ ', '').replace(/\./g, '').replace(',', '.')) : Number((item.product?.price || item.unit_price) || 0)
+            valor_unitario: calcValor
           }
         });
       }
