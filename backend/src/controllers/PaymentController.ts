@@ -15,8 +15,24 @@ export class PaymentController {
       // Chama o serviço do Mercado Pago passando os dados gerados pelo Payment Brick
       const paymentResponse = await MercadoPagoService.createPayment(paymentData);
       
-      // Simulando a persistência do pedido com os itens e o cliente para a emissão futura da NF
-      // Aqui você poderia salvar no banco de dados o pedido vinculado ao ID do pagamento: paymentResponse.id
+      // Persistência do pedido com os itens e o cliente para a emissão futura da NF
+      let totalAmount = 0;
+      if (items && items.length > 0) {
+        totalAmount = items.reduce((acc: number, item: any) => acc + (item.unit_price * item.quantity), 0);
+      } else if (paymentData.transaction_amount) {
+        totalAmount = paymentData.transaction_amount;
+      }
+
+      await prisma.order.create({
+        data: {
+          userId: customer?.email || 'guest',
+          status: 'pending',
+          total: totalAmount,
+          paymentId: String(paymentResponse.id),
+          items: JSON.stringify(items || []),
+          address: JSON.stringify(customer || {})
+        }
+      });
       
       // Envia o e-mail com o QR Code se for PIX
       if (paymentResponse.payment_method_id === 'pix' && customer?.email) {
@@ -37,9 +53,21 @@ export class PaymentController {
 
   async handleWebhook(req: Request, res: Response) {
     try {
-      const { paymentId, status } = req.body; // Simulando a notificação do Mercado Pago
+      // O webhook do Mercado Pago manda action, type e data.id
+      const paymentId = req.body?.data?.id || req.body?.paymentId;
+      const type = req.body?.type;
 
-      console.log(`Webhook recebido: Pagamento ${paymentId} está ${status}`);
+      if (!paymentId || (type && type !== 'payment')) {
+        return res.status(200).send('Ignorado');
+      }
+
+      console.log(`Webhook recebido: Checando pagamento ${paymentId} no Mercado Pago...`);
+
+      // Consulta o Mercado Pago para saber o status real
+      const paymentData = await MercadoPagoService.getPayment(paymentId);
+      const status = paymentData.status;
+
+      console.log(`Status real do pagamento ${paymentId}: ${status}`);
 
       if (status === 'approved') {
         // Busca o pedido real no banco de dados para enviar pra Omie
