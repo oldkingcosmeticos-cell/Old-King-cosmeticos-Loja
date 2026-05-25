@@ -96,6 +96,7 @@ export class OmieService {
       console.error(error.response?.data?.faultstring || error.message);
       console.log("------------------------------------------");
       throw new Error(error.response?.data?.faultstring || error.message);
+    }
   }
 
   static async issueInvoice(order: any) {
