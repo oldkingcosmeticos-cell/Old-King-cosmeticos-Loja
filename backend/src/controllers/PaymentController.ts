@@ -10,7 +10,7 @@ export class PaymentController {
   
   async processCheckout(req: Request, res: Response) {
     try {
-      const { items, customer, ...paymentData } = req.body;
+      const { items, customer, userId, ...paymentData } = req.body;
       
       // Chama o serviço do Mercado Pago passando os dados gerados pelo Payment Brick
       const paymentResponse = await MercadoPagoService.createPayment(paymentData);
@@ -25,7 +25,7 @@ export class PaymentController {
 
       await prisma.order.create({
         data: {
-          userId: customer?.email || 'guest',
+          userId: userId || customer?.email || 'guest',
           status: 'pending',
           totalAmount: totalAmount,
           paymentMethod: paymentResponse.payment_method_id || 'pix',
