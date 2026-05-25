@@ -829,6 +829,7 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
 const CheckoutView = ({ cart, onBack, user }: any) => {
   const [step, setStep] = useState(1);
   const [pixData, setPixData] = useState<any>(null);
+  const [pixPaymentId, setPixPaymentId] = useState<string | null>(null);
   const [shippingOptions, setShippingOptions] = useState<any[]>([]);
   const [selectedShipping, setSelectedShipping] = useState<any>(null);
   const [loadingCep, setLoadingCep] = useState(false);
@@ -1036,6 +1037,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                         body: JSON.stringify({
                           ...param.formData,
                           transaction_amount: cartTotal,
+                          userId: user?.email || null,
                           customer: formData,
                           items: cart.map((c: any) => ({ id: c.product.id, title: c.product.name, quantity: c.quantity, unit_price: c.product.price }))
                         })
@@ -1044,47 +1046,12 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                       if (data.success) {
                         if (data.paymentResponse && data.paymentResponse.payment_method_id === 'pix') {
                           setPixData(data.paymentResponse.point_of_interaction.transaction_data);
+                          setPixPaymentId(String(data.paymentResponse.id));
                           
-                          // Salva o pedido como PENDENTE no banco de dados para aparecer no painel
-                          try {
-                            await fetch(import.meta.env.VITE_API_URL + '/api/orders', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                userId: user?.email || null,
-                                totalAmount: cartTotal,
-                                status: 'pending',
-                                paymentMethod: 'pix',
-                                paymentId: String(data.paymentResponse.id),
-                                items: cart,
-                                shippingFee: selectedShipping?.price || 0,
-                                address: formData
-                              })
-                            });
-                          } catch (e) {
-                            console.error('Erro ao salvar pedido PIX no BD:', e);
-                          }
+                         // O backend agora salva o pedido PIX automaticamente!
                           
                         } else {
-                          // Registra no nosso BD oficial
-                          try {
-                            await fetch(import.meta.env.VITE_API_URL + '/api/orders', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                userId: user?.email || null,
-                                totalAmount: cartTotal,
-                                status: data.paymentResponse.status || 'approved',
-                                paymentMethod: data.paymentResponse.payment_method_id,
-                                paymentId: String(data.paymentResponse.id),
-                                items: cart,
-                                shippingFee: selectedShipping?.price || 0,
-                                address: formData
-                              })
-                            });
-                          } catch (e) {
-                            console.error('Erro ao salvar order no BD:', e);
-                          }
+                         // O backend agora salva o pedido Cartão/Boleto automaticamente!
                           alert('Pagamento aprovado com sucesso!');
                           setCart([]);
                           localStorage.removeItem('oldking_cart');

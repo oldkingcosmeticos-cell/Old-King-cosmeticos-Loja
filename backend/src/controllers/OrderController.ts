@@ -76,4 +76,19 @@ export class OrderController {
       return res.status(500).json({ error: 'Erro ao excluir pedido' });
     }
   }
+
+  static async checkPayment(req: Request, res: Response) {
+    try {
+      const { paymentId } = req.params;
+      const order = await prisma.order.findFirst({
+        where: { paymentId }
+      });
+      if (!order) {
+        return res.status(404).json({ error: 'Pedido não encontrado' });
+      }
+      return res.json({ status: order.status });
+    } catch (err) {
+      return res.status(500).json({ error: 'Erro ao checar status do pagamento' });
+    }
+  }
 }

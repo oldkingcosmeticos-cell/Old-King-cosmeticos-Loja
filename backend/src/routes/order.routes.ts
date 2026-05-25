@@ -10,4 +10,6 @@ router.post('/', OrderController.create);
 router.put('/:id', OrderController.update);
 router.delete('/:id', OrderController.delete);
 
+router.get('/check/:paymentId', OrderController.checkPayment);
+
 export default router;
