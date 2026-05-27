@@ -829,6 +829,7 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
 const CheckoutView = ({ cart, onBack, user }: any) => {
   const [step, setStep] = useState(1);
   const [pixData, setPixData] = useState<any>(null);
+  const [ticketData, setTicketData] = useState<any>(null);
   const [pixPaymentId, setPixPaymentId] = useState<string | null>(null);
   const [shippingOptions, setShippingOptions] = useState<any[]>([]);
   const [selectedShipping, setSelectedShipping] = useState<any>(null);
