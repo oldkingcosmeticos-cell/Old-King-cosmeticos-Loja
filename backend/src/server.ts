@@ -37,6 +37,16 @@ app.use('/api/shipping', shippingRoutes);
 
 const PORT = process.env.PORT || 3001;
 
+app.get('/ping', (req, res) => res.status(200).send('pong'));
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor backend rodando na porta ${PORT}`);
+  
+  // Sistema anti-dormir: dá um "cutucão" no próprio servidor a cada 10 minutos (Render dorme em 15m)
+  const RENDER_URL = 'https://old-king-cosmeticos-loja.onrender.com';
+  setInterval(() => {
+    fetch(`${RENDER_URL}/ping`)
+      .then(res => console.log('[SISTEMA ANTI-DORMIR] Ping executado com sucesso:', res.status))
+      .catch(err => console.error('[SISTEMA ANTI-DORMIR] Ping falhou (ignorando):', err.message));
+  }, 10 * 60 * 1000); // 10 minutos
 });
