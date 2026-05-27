@@ -1006,7 +1006,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
             </div>
           )}
 
-          {step === 2 && !pixData && (
+          {step === 2 && !pixData && !ticketData && (
             <div className="bg-surface border border-white/5 rounded-lg p-6 shadow-2xl animate-in fade-in slide-in-from-right-4">
               <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                 <h2 className="text-xl font-bold text-white">Pagamento Seguro</h2>
@@ -1051,8 +1051,10 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                           
                          // O backend agora salva o pedido PIX automaticamente!
                           
+                        } else if (data.paymentResponse && data.paymentResponse.payment_type_id === 'ticket') {
+                          setTicketData(data.paymentResponse);
                         } else {
-                         // O backend agora salva o pedido Cartão/Boleto automaticamente!
+                          // O backend agora salva o pedido Cartão/Boleto automaticamente!
                           alert('Pagamento aprovado com sucesso!');
                           setCart([]);
                           localStorage.removeItem('oldking_cart');
@@ -1095,6 +1097,30 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                   </button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {step === 2 && ticketData && (
+            <div className="bg-surface border border-white/5 rounded-lg p-6 shadow-2xl animate-in fade-in slide-in-from-right-4 text-center min-h-[300px] flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-bold text-white mb-2">Boleto Gerado com Sucesso!</h2>
+              <p className="text-gray-400 mb-6">Você pode pagar o seu boleto usando a linha digitável abaixo ou imprimindo.</p>
+              
+              <div className="text-left w-full max-w-md mx-auto mb-6">
+                <label className="block text-sm font-medium text-gray-400 mb-2">Linha Digitável:</label>
+                <div className="flex">
+                  <input type="text" readOnly value={ticketData.barcode?.content || 'Carregando código de barras...'} className="flex-1 bg-background border border-white/10 rounded-l-md px-3 py-3 text-white text-sm focus:outline-none" />
+                  <button onClick={() => { navigator.clipboard.writeText(ticketData.barcode?.content || ''); alert('Código copiado!'); }} className="bg-primary hover:bg-primary/90 text-on-primary px-6 py-3 rounded-r-md font-bold transition-colors shrink-0">
+                    Copiar
+                  </button>
+                </div>
+              </div>
+              
+              <a href={ticketData.transaction_details?.external_resource_url} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded font-bold transition-colors mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v8H6z"></path></svg>
+                Imprimir / Ver Boleto
+              </a>
+              
+              <p className="text-xs text-gray-500">O pagamento por boleto pode demorar até 2 dias úteis para ser compensado.</p>
             </div>
           )}
         </div>
