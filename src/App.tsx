@@ -138,7 +138,7 @@ const ProductCard = ({ product, isAdmin, onEdit, onBuy, onDelete, onAddToCart, i
             <Heart size={18} className={isFavorite ? "fill-red-500 text-red-500" : "text-white"} />
           </button>
         )}
-        <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-screen group-hover:scale-105 transition-transform" />
+        <img src={product.image} loading="lazy" alt={product.name} className="w-full h-full object-contain mix-blend-screen group-hover:scale-105 transition-transform" />
       </div>
     
     <div className="flex flex-col flex-1 items-center text-center">
@@ -230,7 +230,7 @@ const BannerCard = ({ banner, isAdmin, onEdit, onDelete, onClick }: { banner: an
           )}
         </div>
       )}
-      <img src={banner.img} className="w-full h-full object-cover group-hover/banner:scale-105 transition-transform duration-500" />
+      <img src={banner.img} loading="lazy" className="w-full h-full object-cover group-hover/banner:scale-105 transition-transform duration-500" />
     </div>
   );
 };
@@ -317,7 +317,7 @@ const ProductDetailsView = ({ product, onBack, onAddToCart, isFavorite, onToggle
                 onClick={() => setMainImage(img)}
                 className={`w-20 h-20 md:w-24 md:h-24 flex-shrink-0 border-2 rounded-md overflow-hidden bg-white/5 p-2 transition-all ${mainImage === img ? 'border-primary' : 'border-transparent hover:border-primary/50'}`}
               >
-                <img src={img} className="w-full h-full object-contain mix-blend-screen" />
+                <img src={img} loading="lazy" className="w-full h-full object-contain mix-blend-screen" />
               </button>
             ))}
           </div>
