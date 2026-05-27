@@ -12,6 +12,18 @@ export class PaymentController {
     try {
       const { items, customer, userId, ...paymentData } = req.body;
       
+      // O Mercado Pago exige endereço completo para gerar boletos registrados
+      if (customer && paymentData.payer) {
+        paymentData.payer.address = {
+          zip_code: customer.cep ? customer.cep.replace(/\D/g, '') : '',
+          street_name: customer.street || 'Não informado',
+          street_number: customer.number || 'S/N',
+          neighborhood: customer.neighborhood || 'Não informado',
+          city: customer.city || 'Não informado',
+          federal_unit: customer.state || 'SP'
+        };
+      }
+      
       // Chama o serviço do Mercado Pago passando os dados gerados pelo Payment Brick
       const paymentResponse = await MercadoPagoService.createPayment(paymentData);
       
