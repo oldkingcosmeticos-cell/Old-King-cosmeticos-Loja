@@ -170,33 +170,7 @@ export class OmieService {
   }
 
   static async issueInvoice(order: any) {
-    console.log(`[OMIE] Solicitando faturamento automático (Etapa 50) para o pedido ${order.id}...`);
-    
-    const app_key = process.env.OMIE_APP_KEY;
-    const app_secret = process.env.OMIE_APP_SECRET;
-
-    if (!app_key || !app_secret || app_key === '1234567890') {
-      return false;
-    }
-
-    try {
-      const payload = {
-        call: 'TrocarEtapaPedido',
-        app_key,
-        app_secret,
-        param: [{
-          codigo_pedido_integracao: order.id,
-          etapa: '50' // 50 é o código padrão para faturar/emitir NF-e na Omie
-        }]
-      };
-
-      await axios.post('https://app.omie.com.br/api/v1/produtos/pedido/', payload);
-      console.log(`[OMIE] Sucesso! Pedido movido para a etapa de faturamento. A NF-e e o e-mail serão gerados pela Omie.`);
-      return true;
-    } catch (error: any) {
-      console.error("[OMIE ERROR] Falha ao solicitar faturamento automático:");
-      console.error(error.response?.data?.faultstring || error.message);
-      return false;
-    }
+    console.log(`[OMIE] Pedido ${order.id} aguardando faturamento manual na Etapa 20.`);
+    return true;
   }
 }
