@@ -1000,7 +1000,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                 )}
 
                 <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-on-primary font-bold text-lg py-4 rounded-md mt-6 transition-all hover:shadow-[0_0_20px_rgba(233,193,118,0.3)]">
-                  Ir para Pagamento
+                  Ir para Pagamento (R$ {cartTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })})
                 </button>
               </form>
             </div>
