@@ -12,8 +12,12 @@ export class PaymentController {
     try {
       const { items, customer, userId, ...paymentData } = req.body;
       
-      // O Mercado Pago exige endereço completo para gerar boletos registrados
-      if (customer && paymentData.payer) {
+      // O Mercado Pago exige endereço completo para gerar boletos registrados.
+      // Porém, para cartões de crédito (que enviam 'token') isso pode causar falhas na API.
+      const isCard = !!paymentData.token;
+      const isPix = paymentData.payment_method_id === 'pix';
+      
+      if (!isCard && !isPix && customer && paymentData.payer) {
         paymentData.payer.address = {
           zip_code: customer.cep ? customer.cep.replace(/\D/g, '') : '',
           street_name: customer.street || 'Não informado',
