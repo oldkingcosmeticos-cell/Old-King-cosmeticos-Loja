@@ -73,7 +73,13 @@ export class ShippingController {
           }
         );
         
-        validOptions = response.data.filter((opt: any) => !opt.error).map((opt: any) => ({
+        validOptions = response.data
+          .filter((opt: any) => !opt.error)
+          .filter((opt: any) => {
+            const lowerName = String(opt.name || '').toLowerCase();
+            return lowerName.includes('pac') || lowerName.includes('sedex');
+          })
+          .map((opt: any) => ({
           name: opt.name,
           price: parseFloat(opt.price),
           delivery_time: opt.delivery_time,
