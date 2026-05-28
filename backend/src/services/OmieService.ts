@@ -141,7 +141,7 @@ export class OmieService {
             codigo_cliente: codigo_cliente_omie,
             codigo_pedido_integracao: order.id,
             data_previsao: new Date().toLocaleDateString('pt-BR'),
-            etapa: "50", // Etapa 50: Faturar automaticamente e gerar NF-e
+            etapa: "20", // Etapa 20: Faturar
             quantidade_itens: det.length
           },
           det: orderItems,
