@@ -10,5 +10,6 @@ router.post('/checkout', paymentController.processCheckout);
 // Rota simulando o webhook do Mercado Pago (aviso de pagamento aprovado para o sistema)
 router.post('/webhook', paymentController.handleWebhook);
 router.post('/test-webhook/:paymentId', paymentController.testWebhook);
+router.get('/payments/:paymentId/status', paymentController.checkStatus);
 
 export default router;

@@ -75,6 +75,21 @@ export class PaymentController {
     }
   }
 
+  async checkStatus(req: Request, res: Response) {
+    try {
+      const { paymentId } = req.params;
+      const order = await prisma.order.findFirst({
+        where: { paymentId: String(paymentId) }
+      });
+      if (!order) {
+        return res.status(404).json({ success: false, message: 'Pedido não encontrado' });
+      }
+      return res.status(200).json({ success: true, status: order.status });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Erro ao verificar status' });
+    }
+  }
+
   async handleWebhook(req: Request, res: Response) {
     try {
       // O webhook do Mercado Pago manda action, type e data.id

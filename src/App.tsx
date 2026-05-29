@@ -853,6 +853,29 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
     window.scrollTo(0, 0);
   }, [step]);
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (pixPaymentId && !paymentSuccess) {
+      interval = setInterval(async () => {
+        try {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/${pixPaymentId}/status`);
+          const data = await res.json();
+          if (data.success && data.status === 'approved') {
+            setPixData(null);
+            setPixPaymentId(null);
+            setPaymentSuccess(true);
+            if (onSuccess) onSuccess(); // Esvazia o carrinho
+          }
+        } catch (e) {
+          console.error('Erro ao verificar status do PIX:', e);
+        }
+      }, 3000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [pixPaymentId, paymentSuccess, onSuccess]);
+
   const cartTotal = cart.reduce((acc: number, item: any) => {
     const priceStr = String(item.product.price);
     const priceNum = parseFloat(priceStr.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
@@ -1096,13 +1119,10 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
             </div>
           )}
 
-          {step === 2 && pixData && (
-            <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-8 shadow-2xl text-center animate-in fade-in slide-in-from-bottom-4 flex flex-col items-center justify-center min-h-[300px]">
-              <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-                <Check size={32} />
-              </div>
-              <h2 className="text-3xl font-bold text-white mb-2">Pedido Gerado!</h2>
-              <p className="text-green-400 mb-6 text-lg">Abra o app do seu banco e escaneie o QR Code ou use o Copia e Cola para pagar o seu PIX.</p>
+          {step === 2 && pixData && !paymentSuccess && (
+            <div className="bg-surface border border-white/5 rounded-lg p-6 shadow-2xl animate-in fade-in slide-in-from-right-4 text-center min-h-[300px] flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-bold text-white mb-2">Pagamento via PIX</h2>
+              <p className="text-gray-400 mb-6">Abra o app do seu banco e escaneie o QR Code ou use o Copia e Cola.</p>
               
               <div className="bg-white p-4 rounded-lg inline-block mb-6 shadow-[0_0_20px_rgba(233,193,118,0.2)]">
                 <img src={`data:image/jpeg;base64,${pixData.qr_code_base64}`} alt="QR Code PIX" className="w-48 h-48" />
@@ -1120,13 +1140,10 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
             </div>
           )}
 
-          {step === 2 && ticketData && (
-            <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-8 shadow-2xl text-center animate-in fade-in slide-in-from-bottom-4 flex flex-col items-center justify-center min-h-[300px]">
-              <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-                <Check size={32} />
-              </div>
-              <h2 className="text-3xl font-bold text-white mb-2">Pedido Gerado!</h2>
-              <p className="text-green-400 mb-6 text-lg">Seu boleto foi gerado com sucesso. Pague usando a linha digitável abaixo ou imprimindo.</p>
+          {step === 2 && ticketData && !paymentSuccess && (
+            <div className="bg-surface border border-white/5 rounded-lg p-6 shadow-2xl animate-in fade-in slide-in-from-right-4 text-center min-h-[300px] flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-bold text-white mb-2">Boleto Gerado com Sucesso!</h2>
+              <p className="text-gray-400 mb-6">Você pode pagar o seu boleto usando a linha digitável abaixo ou imprimindo.</p>
               
               <div className="text-left w-full max-w-md mx-auto mb-6">
                 <label className="block text-sm font-medium text-gray-400 mb-2">Linha Digitável:</label>
