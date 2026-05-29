@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search } from 'lucide-react';
+import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search, Check } from 'lucide-react';
 import logo from './assets/671820305_17917652571349694_6608811899973837934_n (1).jpg';
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 
@@ -826,8 +826,9 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-const CheckoutView = ({ cart, onBack, user }: any) => {
+const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
   const [step, setStep] = useState(1);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [pixData, setPixData] = useState<any>(null);
   const [ticketData, setTicketData] = useState<any>(null);
   const [pixPaymentId, setPixPaymentId] = useState<string | null>(null);
@@ -1006,7 +1007,26 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
             </div>
           )}
 
-          {step === 2 && !pixData && !ticketData && (
+          {paymentSuccess && (
+            <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-8 shadow-2xl text-center animate-in fade-in slide-in-from-bottom-4">
+              <div className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+                <Check size={40} />
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">Pagamento Aprovado!</h2>
+              <p className="text-green-400 mb-8 text-lg">Seu pedido foi confirmado e já estamos preparando para envio.</p>
+              
+              <button 
+                onClick={() => {
+                  if (onHome) onHome(); // Voltar para home/loja sem alert
+                }}
+                className="bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105"
+              >
+                Continuar Comprando
+              </button>
+            </div>
+          )}
+
+          {step === 2 && !pixData && !ticketData && !paymentSuccess && (
             <div className="bg-surface border border-white/5 rounded-lg p-6 shadow-2xl animate-in fade-in slide-in-from-right-4">
               <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                 <h2 className="text-xl font-bold text-white">Pagamento Seguro</h2>
@@ -1040,7 +1060,7 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                           transaction_amount: cartTotal,
                           userId: user?.email || null,
                           customer: formData,
-                          items: cart.map((c: any) => ({ id: c.product.id, title: c.product.name, quantity: c.quantity, unit_price: c.product.price }))
+                          items: cart.map((c: any) => ({ id: c.product.id, sku: c.product.sku, title: c.product.name, quantity: c.quantity, unit_price: c.product.price, product: c.product }))
                         })
                       });
                       const data = await res.json();
@@ -1055,10 +1075,8 @@ const CheckoutView = ({ cart, onBack, user }: any) => {
                           setTicketData(data.paymentResponse);
                         } else {
                           // O backend agora salva o pedido Cartão/Boleto automaticamente!
-                          alert('Pagamento aprovado com sucesso!');
-                          setCart([]);
-                          localStorage.removeItem('oldking_cart');
-                          setCurrentView('home');
+                          setPaymentSuccess(true);
+                          if (onSuccess) onSuccess();
                         }
                       } else {
                         alert('Erro ao processar pagamento: ' + data.message);
@@ -2256,7 +2274,12 @@ export default function App() {
         <CheckoutView 
           cart={cart}
           onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
+          onHome={() => setCurrentView('home')}
           user={user}
+          onSuccess={() => {
+            setCart([]);
+            localStorage.removeItem('oldking_cart');
+          }}
         />
       ) : currentView === 'institutional' ? (
         <div className="max-w-4xl mx-auto py-12 px-4 animate-in fade-in slide-in-from-bottom-4">
@@ -3041,8 +3064,10 @@ export default function App() {
             <Edit2 size={16} />
           </button>
         )}
-        <button 
-          onClick={() => window.open(`https://wa.me/${whatsappNumber}`, '_blank')}
+        <a 
+          href={`https://wa.me/${whatsappNumber}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 rounded-full shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:shadow-[0_0_25px_rgba(37,211,102,0.5)] transition-all hover:-translate-y-1 group relative flex items-center justify-center"
           title="Fale conosco no WhatsApp"
         >
@@ -3050,7 +3075,7 @@ export default function App() {
           <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-black px-3 py-1.5 rounded text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
             Fale conosco
           </span>
-        </button>
+        </a>
       </div>
     </div>
   );
