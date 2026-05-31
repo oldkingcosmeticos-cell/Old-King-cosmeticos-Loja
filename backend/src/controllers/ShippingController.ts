@@ -76,8 +76,9 @@ export class ShippingController {
         validOptions = response.data
           .filter((opt: any) => !opt.error)
           .filter((opt: any) => {
+            const companyName = String(opt.company?.name || '').toLowerCase();
             const lowerName = String(opt.name || '').toLowerCase();
-            return lowerName.includes('pac') || lowerName.includes('sedex');
+            return companyName.includes('correios') || lowerName === 'pac' || lowerName === 'sedex';
           })
           .map((opt: any) => ({
           name: opt.name,
