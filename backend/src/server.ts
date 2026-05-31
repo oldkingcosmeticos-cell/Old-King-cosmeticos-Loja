@@ -39,6 +39,26 @@ const PORT = process.env.PORT || 3001;
 
 app.get('/ping', (req, res) => res.status(200).send('pong'));
 
+import { EmailService } from './services/EmailService';
+
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const to = String(req.query.to || process.env.SMTP_USER || 'contato@oldkingcosmeticos.com.br');
+    await EmailService.sendPaymentApprovedEmail(to, 'TESTE-12345');
+    res.status(200).json({ 
+      success: true, 
+      message: `E-mail de teste enviado para ${to} com sucesso! Verifique a caixa de entrada/spam.`,
+      credentials_used: process.env.SMTP_USER || 'Nenhuma (Ethereal test)'
+    });
+  } catch (err: any) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Erro ao tentar enviar o e-mail. Verifique sua senha de APP.',
+      error: err.message,
+      stack: err.stack
+    });
+  }
+});
 app.listen(PORT, () => {
   console.log(`🚀 Servidor backend rodando na porta ${PORT}`);
   
