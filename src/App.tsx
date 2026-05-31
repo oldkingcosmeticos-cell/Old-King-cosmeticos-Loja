@@ -914,8 +914,10 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
     return acc + (priceNum * item.quantity);
   }, 0);
 
-  const shippingPrice = selectedShipping && selectedShipping.price ? Number(String(selectedShipping.price).replace(',', '.')) : 0;
-  const cartTotal = Number(subtotal) + (isNaN(shippingPrice) ? 0 : shippingPrice);
+  const rawPrice = selectedShipping?.price;
+  const parsedShipping = typeof rawPrice === 'string' ? Number(rawPrice.replace(',', '.')) : Number(rawPrice || 0);
+  const shippingPrice = isNaN(parsedShipping) ? 0 : parsedShipping;
+  const cartTotal = Number(subtotal) + shippingPrice;
 
   const fetchCep = async (cep: string) => {
     const cleanCep = cep.replace(/\D/g, '');
@@ -1281,7 +1283,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                 <span>Total</span>
                 <div className="flex flex-col items-end">
                   <span className="text-primary">R$ {cartTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                  <span className="text-[10px] text-red-500 opacity-50">S={subtotal} | F={shippingPrice} | T={cartTotal}</span>
+                  <span className="text-[10px] text-red-500 opacity-50">S={subtotal} | RawF={rawPrice} ({typeof rawPrice}) | F={shippingPrice} | T={cartTotal}</span>
                 </div>
               </div>
             </div>
