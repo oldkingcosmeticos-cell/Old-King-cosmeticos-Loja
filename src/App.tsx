@@ -877,11 +877,14 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
     };
   }, [pixPaymentId, paymentSuccess, onSuccess]);
 
-  const cartTotal = cart.reduce((acc: number, item: any) => {
+  const subtotal = cart.reduce((acc: number, item: any) => {
     const priceStr = String(item.product.price);
     const priceNum = parseFloat(priceStr.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
     return acc + (priceNum * item.quantity);
-  }, 0) + (selectedShipping ? selectedShipping.price : 0);
+  }, 0);
+
+  const shippingPrice = selectedShipping ? parseFloat(String(selectedShipping.price).replace(',', '.')) : 0;
+  const cartTotal = subtotal + shippingPrice;
 
   const fetchCep = async (cep: string) => {
     const cleanCep = cep.replace(/\D/g, '');
@@ -1198,12 +1201,12 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
             <div className="border-t border-white/10 pt-4 mt-4 space-y-2">
               <div className="flex justify-between text-sm text-gray-400">
                 <span>Subtotal</span>
-                <span>R$ {(cartTotal - (selectedShipping ? selectedShipping.price : 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span>R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
               {selectedShipping && (
                 <div className="flex justify-between text-sm text-gray-400">
                   <span>Frete ({selectedShipping.name})</span>
-                  <span>R$ {selectedShipping.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span>R$ {shippingPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold text-lg text-primary pt-2 border-t border-white/10">
