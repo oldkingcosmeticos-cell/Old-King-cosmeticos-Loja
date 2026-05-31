@@ -1101,7 +1101,8 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                     paymentMethods: {
                       ticket: "all",
                       bankTransfer: "all",
-                      creditCard: "all"
+                      creditCard: "all",
+                      debitCard: "all"
                     },
                   }}
                   onSubmit={async (param) => {
