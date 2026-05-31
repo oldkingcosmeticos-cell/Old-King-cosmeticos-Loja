@@ -1401,11 +1401,10 @@ const Footer = ({ config, isAdmin, onEdit, onInstitutionalClick, onCategoryClick
 
         <div className="flex flex-col gap-4">
           <h4 className="text-white font-bold text-sm uppercase tracking-wider">Formas de envio</h4>
-          <div className="flex flex-wrap gap-2">
-             <div className="bg-yellow-400 text-blue-900 font-black italic px-3 py-1.5 rounded text-sm">SEDEX</div>
-             <div className="bg-blue-900 text-yellow-400 font-black italic px-3 py-1.5 rounded text-sm">PAC</div>
-             <div className="bg-red-600 text-white font-black px-3 py-1.5 rounded text-sm tracking-widest flex items-center gap-1"><div className="w-2 h-2 bg-white"></div> jadlog</div>
-          </div>
+          <div className="flex gap-2">
+             <div className="bg-yellow-400 text-blue-900 font-black italic px-3 py-1.5 rounded text-sm tracking-wider">SEDEX</div>
+             <div className="bg-blue-800 text-yellow-400 font-black italic px-3 py-1.5 rounded text-sm tracking-wider">PAC</div>
+           </div>
         </div>
       </div>
     </div>
