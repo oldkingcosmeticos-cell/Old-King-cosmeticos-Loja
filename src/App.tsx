@@ -826,7 +826,7 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
+const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEnabled }: any) => {
   const [step, setStep] = useState(1);
   const [mpError, setMpError] = useState<string | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -2340,6 +2340,7 @@ export default function App() {
           onBack={() => { if(window.confirm('Você deseja mesmo sair?')) setCurrentView('home'); }} 
           onHome={() => setCurrentView('home')}
           user={user}
+          isTestShippingEnabled={isTestShippingEnabled}
           onSuccess={() => {
             setCart([]);
             localStorage.removeItem('oldking_cart_guest');
