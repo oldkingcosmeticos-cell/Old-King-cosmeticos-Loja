@@ -1165,22 +1165,25 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                           } else {
                             const errorMsg = 'Pagamento ' + (data.paymentResponse.status_detail || data.paymentResponse.status) + ' - Verifique os dados do cartão e tente novamente.';
                             setMpError(errorMsg);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
                             throw new Error(errorMsg);
                           }
                         }
                       } else {
                         setMpError('Erro ao processar pagamento: ' + data.message);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                         throw new Error(data.message);
                       }
                     } catch (err: any) {
                       console.error('Erro na requisição de pagamento:', err);
                       setMpError('Erro ao processar pagamento no servidor: ' + err?.message);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                       throw err;
                     }
                   }}
                   onError={(error) => {
                     console.error('Erro no Mercado Pago Brick:', error);
-                    setMpError(JSON.stringify(error));
+                    setMpError((prev) => prev ? prev : 'Erro no componente de pagamento. Verifique seus dados.');
                   }}
                   onReady={() => {
                     console.log('Payment Brick carregado e pronto');
