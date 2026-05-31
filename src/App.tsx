@@ -1024,17 +1024,19 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                         </label>
                       ))}
                       
-                      {/* Temp Free Shipping for PROD testing */}
-                      <label className={`flex items-center justify-between p-3 rounded border cursor-pointer transition-colors ${selectedShipping?.name === 'Frete Grátis (Teste)' ? 'border-purple-500 bg-purple-500/10' : 'border-purple-500/30 bg-background/50 hover:border-purple-500/50'}`}>
-                        <div className="flex items-center gap-3">
-                          <input type="radio" name="shipping" required checked={selectedShipping?.name === 'Frete Grátis (Teste)'} onChange={() => setSelectedShipping({ name: 'Frete Grátis (Teste)', price: 0, company: 'DEV', delivery_time: 1 })} className="accent-purple-500 w-4 h-4" />
-                          <div>
-                            <span className="text-purple-400 font-medium block">Frete Teste (R$ 0,00)</span>
-                            <span className="text-gray-400 text-xs">Para testar PIX/Cartão</span>
+                      {/* Temp Free Shipping for PROD testing toggled by Admin */}
+                      {isTestShippingEnabled && (
+                        <label className={`flex items-center justify-between p-3 rounded border cursor-pointer transition-colors ${selectedShipping?.name === 'Frete Grátis (Teste)' ? 'border-purple-500 bg-purple-500/10' : 'border-purple-500/30 bg-background/50 hover:border-purple-500/50'}`}>
+                          <div className="flex items-center gap-3">
+                            <input type="radio" name="shipping" required checked={selectedShipping?.name === 'Frete Grátis (Teste)'} onChange={() => setSelectedShipping({ name: 'Frete Grátis (Teste)', price: 0, company: 'DEV', delivery_time: 1 })} className="accent-purple-500 w-4 h-4" />
+                            <div>
+                              <span className="text-purple-400 font-medium block">Frete Teste (R$ 0,00)</span>
+                              <span className="text-gray-400 text-xs">Para testar PIX/Cartão</span>
+                            </div>
                           </div>
-                        </div>
-                        <span className="text-purple-400 font-bold">R$ 0,00</span>
-                      </label>
+                          <span className="text-purple-400 font-bold">R$ 0,00</span>
+                        </label>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1512,6 +1514,7 @@ export default function App() {
 
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [whatsappNumber, setWhatsappNumber] = useState(() => localStorage.getItem('oldking_whatsapp') || '5511999999999');
+  const [isTestShippingEnabled, setIsTestShippingEnabled] = useState(() => localStorage.getItem('oldking_test_shipping') === 'true');
   const [productForm, setProductForm] = useState<{name: string, price: string, originalPrice: string, wholesalePrices: {quantity: string, price: string}[], sku: string, image: string, image2: string, image3: string, image4: string, tags: string[], listCategory: 'bestsellers' | 'newreleases'}>({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', image3: '', image4: '', tags: [], listCategory: 'newreleases' });
 
   const [cart, setCart] = useState<{product: any, quantity: number}[]>(() => {
@@ -3112,22 +3115,36 @@ export default function App() {
       {/* WhatsApp Floating Button */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 animate-in fade-in duration-500 delay-500">
         {isAdmin && (
-          <button 
-            onClick={() => {
-              const newNumber = prompt('Digite o número do WhatsApp com código do país e DDD (ex: 5511999999999):', whatsappNumber);
-              if (newNumber) {
-                const cleaned = newNumber.replace(/\D/g, '');
-                if (cleaned) {
-                  setWhatsappNumber(cleaned);
-                  localStorage.setItem('oldking_whatsapp', cleaned);
+          <>
+            <button 
+              onClick={() => {
+                const newState = !isTestShippingEnabled;
+                setIsTestShippingEnabled(newState);
+                localStorage.setItem('oldking_test_shipping', String(newState));
+                alert(`Frete de Teste (R$ 0,00) ${newState ? 'ATIVADO' : 'DESATIVADO'}.`);
+              }}
+              className={`p-2 rounded-full shadow-lg transition-colors flex items-center justify-center backdrop-blur-sm ${isTestShippingEnabled ? 'bg-purple-600 text-white' : 'bg-surface border border-white/10 text-gray-400 hover:text-purple-400 bg-black/80'}`}
+              title="Ativar/Desativar Frete Grátis (Teste)"
+            >
+              <Truck size={16} />
+            </button>
+            <button 
+              onClick={() => {
+                const newNumber = prompt('Digite o número do WhatsApp com código do país e DDD (ex: 5511999999999):', whatsappNumber);
+                if (newNumber) {
+                  const cleaned = newNumber.replace(/\D/g, '');
+                  if (cleaned) {
+                    setWhatsappNumber(cleaned);
+                    localStorage.setItem('oldking_whatsapp', cleaned);
+                  }
                 }
-              }
-            }}
-            className="bg-surface border border-white/10 text-gray-400 p-2 rounded-full shadow-lg hover:text-primary transition-colors flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            title="Editar número do WhatsApp"
-          >
-            <Edit2 size={16} />
-          </button>
+              }}
+              className="bg-surface border border-white/10 text-gray-400 p-2 rounded-full shadow-lg hover:text-primary transition-colors flex items-center justify-center bg-black/80 backdrop-blur-sm"
+              title="Editar número do WhatsApp"
+            >
+              <Edit2 size={16} />
+            </button>
+          </>
         )}
         <a 
           href={`https://api.whatsapp.com/send?phone=${whatsappNumber}`}
