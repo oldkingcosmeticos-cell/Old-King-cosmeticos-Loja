@@ -1135,6 +1135,13 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                   }}
                   onSubmit={async (param) => {
                     try {
+                      if (param.formData.payment_method_id !== 'pix' && param.formData.payment_method_id !== 'bolbradesco') {
+                        // Alert para debugar o que o Brick está passando
+                        if (!param.formData.token) {
+                          alert("ERRO NO BRICK: O componente não gerou o Token do Cartão! " + JSON.stringify(param.formData));
+                        }
+                      }
+
                       const res = await fetch((import.meta.env.VITE_API_URL || 'https://old-king-cosmeticos-loja.onrender.com') + '/api/checkout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
