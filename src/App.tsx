@@ -1164,16 +1164,19 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                             setMpError('O pagamento está em análise. Você receberá um e-mail quando for aprovado.');
                           } else {
                             const errorMsg = 'Pagamento ' + (data.paymentResponse.status_detail || data.paymentResponse.status) + ' - Verifique os dados do cartão e tente novamente.';
+                            alert(errorMsg);
                             setMpError(errorMsg);
                             throw new Error(errorMsg);
                           }
                         }
                       } else {
+                        alert('Erro ao processar pagamento: ' + data.message);
                         setMpError('Erro ao processar pagamento: ' + data.message);
                         throw new Error(data.message);
                       }
                     } catch (err: any) {
                       console.error('Erro na requisição de pagamento:', err);
+                      alert('Erro ao processar pagamento no servidor: ' + err?.message);
                       setMpError('Erro ao processar pagamento no servidor: ' + err?.message);
                       throw err;
                     }
