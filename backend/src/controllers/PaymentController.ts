@@ -21,7 +21,7 @@ export class PaymentController {
         paymentData.payer.email = 'noreply@oldkingcosmeticos.com.br';
       }
 
-      if (!isCard && !isPix && customer && paymentData.payer) {
+      if (customer && paymentData.payer) {
         paymentData.payer.address = {
           zip_code: customer.cep ? customer.cep.replace(/\D/g, '') : '',
           street_name: customer.street || 'Não informado',
