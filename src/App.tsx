@@ -4,7 +4,7 @@ import logo from './assets/671820305_17917652571349694_6608811899973837934_n (1)
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 
 // Inicializa o Mercado Pago
-initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY || 'TEST-1762df85-2fba-42b3-8e90-aa4cb720b65c');
+initMercadoPago('APP_USR-8bee8a49-cf18-4775-ad78-f1620b18bbfa');
 
 // Constants removidas para o backend
 
