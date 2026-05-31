@@ -20,6 +20,34 @@ const INITIAL_FOOTER_CONFIG = {
   originCep: ''
 };
 
+const getUnitPrice = (product: any, quantity: number) => {
+  if (!product) return 0;
+  
+  let priceStr = String(product.price || '0');
+  let priceNum = parseFloat(priceStr.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+  
+  let applicableWholesalePrice: number | null = null;
+  let highestQuantityThreshold = 0;
+  
+  if (product.wholesalePrices && Array.isArray(product.wholesalePrices)) {
+    for (const wp of product.wholesalePrices) {
+      const wq = parseInt(wp.quantity || '0', 10);
+      if (quantity >= wq && wq > highestQuantityThreshold) {
+        highestQuantityThreshold = wq;
+        applicableWholesalePrice = parseFloat(String(wp.price).replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+      }
+    }
+  } else if (product.wholesalePrice) {
+    // Legacy support for single wholesale price
+    const wq = 5; // Default legacy threshold
+    if (quantity >= wq) {
+      applicableWholesalePrice = parseFloat(String(product.wholesalePrice).replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+    }
+  }
+  
+  return applicableWholesalePrice !== null && !isNaN(applicableWholesalePrice) ? applicableWholesalePrice : (isNaN(priceNum) ? 0 : priceNum);
+};
+
 const ReviewCard = ({ review, type = 'site', currentUser, isAdmin, onDelete }: any) => {
   const canDelete = isAdmin || (currentUser && currentUser.name === review.name);
 
@@ -878,8 +906,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
   }, [pixPaymentId, paymentSuccess, onSuccess]);
 
   const subtotal = cart.reduce((acc: number, item: any) => {
-    const priceStr = String(item.product.price);
-    const priceNum = parseFloat(priceStr.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+    const priceNum = getUnitPrice(item.product, item.quantity);
     return acc + (priceNum * item.quantity);
   }, 0);
 
@@ -1222,7 +1249,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                     <span className="text-xs text-gray-500">Qtd: {item.quantity}</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm font-bold text-primary">{item.product.price}</span>
+                    <span className="text-sm font-bold text-primary">R$ {getUnitPrice(item.product, item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
                 </div>
               ))}
@@ -3053,7 +3080,7 @@ export default function App() {
                     <div className="flex-1 flex flex-col">
                       <h4 className="text-sm font-medium text-gray-200 line-clamp-2 pr-6">{item.product.name}</h4>
                       <div className="mt-auto flex items-end justify-between">
-                        <span className="text-primary font-bold text-sm">{item.product.price}</span>
+                        <span className="text-primary font-bold text-sm">R$ {getUnitPrice(item.product, item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                         <div className="flex items-center bg-surface border border-white/10 rounded-sm">
                           <button onClick={() => handleUpdateQuantity(item.product.id, -1)} className="px-2 py-1 text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
                             <Minus size={14} />
@@ -3082,8 +3109,7 @@ export default function App() {
                   <span className="text-gray-400">Total:</span>
                   <span className="text-2xl font-bold text-primary">
                     R$ {cart.reduce((acc, item) => {
-                      const priceStr = String(item.product.price);
-                      const priceNum = parseFloat(priceStr.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+                      const priceNum = getUnitPrice(item.product, item.quantity);
                       return acc + (priceNum * item.quantity);
                     }, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
