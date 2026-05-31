@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search, Check } from 'lucide-react';
+import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search, Check, Truck } from 'lucide-react';
 import logo from './assets/671820305_17917652571349694_6608811899973837934_n (1).jpg';
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 
