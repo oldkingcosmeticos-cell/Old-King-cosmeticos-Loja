@@ -1281,10 +1281,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
               )}
               <div className="flex justify-between font-bold text-lg text-primary pt-2 border-t border-white/10">
                 <span>Total</span>
-                <div className="flex flex-col items-end">
-                  <span className="text-primary">R$ {cartTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                  <span className="text-[10px] text-red-500 opacity-50">S={subtotal} | RawType={typeof rawPrice} | F={shippingPrice} | T={cartTotal}</span>
-                </div>
+                <span className="text-primary">R$ {cartTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
           </div>
