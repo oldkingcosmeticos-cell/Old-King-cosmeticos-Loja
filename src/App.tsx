@@ -859,7 +859,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
     if (pixPaymentId && !paymentSuccess) {
       interval = setInterval(async () => {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/payments/${pixPaymentId}/status`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://old-king-cosmeticos-loja.onrender.com'}/api/payments/${pixPaymentId}/status`);
           const data = await res.json();
           if (data.success && data.status === 'approved') {
             setPixData(null);
@@ -1060,7 +1060,18 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                 <button onClick={() => setStep(1)} className="text-sm text-gray-400 hover:text-primary transition-colors">Voltar para Identificação</button>
               </div>
               
-              <div className="bg-background border border-white/10 rounded-md p-2 min-h-[300px]">
+              <div className="bg-background border border-white/10 rounded-md p-2 min-h-[300px] relative">
+                {import.meta.env.DEV && (
+                  <button 
+                    onClick={() => {
+                      setPaymentSuccess(true);
+                      if (onSuccess) onSuccess();
+                    }}
+                    className="absolute top-2 right-2 bg-purple-600 hover:bg-purple-500 text-white text-xs px-3 py-1 rounded z-50 shadow-lg"
+                  >
+                    DEV: Simular Sucesso
+                  </button>
+                )}
                 {mpError && (
                   <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded mb-4 text-sm">
                     <strong>Erro no Mercado Pago:</strong> {mpError}
@@ -1084,7 +1095,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                   }}
                   onSubmit={async (param) => {
                     try {
-                      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/checkout', {
+                      const res = await fetch((import.meta.env.VITE_API_URL || 'https://old-king-cosmeticos-loja.onrender.com') + '/api/checkout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -2311,7 +2322,10 @@ export default function App() {
           user={user}
           onSuccess={() => {
             setCart([]);
-            localStorage.removeItem('oldking_cart');
+            const savedUser = localStorage.getItem('oldking_user');
+            const u = savedUser ? JSON.parse(savedUser) : null;
+            const key = u ? `oldking_cart_${u.id}` : 'oldking_cart_guest';
+            localStorage.removeItem(key);
           }}
         />
       ) : currentView === 'institutional' ? (
