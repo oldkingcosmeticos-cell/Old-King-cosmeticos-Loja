@@ -104,6 +104,7 @@ export class EmailService {
       }
     } catch (error) {
       console.error('Erro ao enviar e-mail de confirmação:', error);
+      throw error;
     }
   }
 
