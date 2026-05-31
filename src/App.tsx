@@ -11,7 +11,7 @@ initMercadoPago('APP_USR-8bee8a49-cf18-4775-ad78-f1620b18bbfa');
 const INITIAL_FOOTER_CONFIG = {
   phone: '(11) 99469-1444',
   whatsapp: '(11) 99469-1444',
-  email: 'contato@oldkingcosmeticos.com.br',
+  email: 'atendimento@oldkingcosmeticos.com.br',
   hours: 'seg a sex das 9h às 18h',
   description: 'A Old King Cosméticos fabrica produtos masculinos premium para Barba, Cabelo e Bigode.',
   instagram: 'https://instagram.com/oldking',

@@ -68,7 +68,7 @@ export class ShippingController {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${settings.melhorEnvioToken}`,
-              'User-Agent': 'old-king-store (contato@oldking.com.br)'
+              'User-Agent': 'old-king-store (atendimento@oldkingcosmeticos.com.br)'
             }
           }
         );

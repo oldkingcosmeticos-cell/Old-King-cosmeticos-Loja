@@ -43,7 +43,7 @@ import { EmailService } from './services/EmailService';
 
 app.get('/api/test-email', async (req, res) => {
   try {
-    const to = String(req.query.to || process.env.SMTP_USER || 'contato@oldkingcosmeticos.com.br');
+    const to = String(req.query.to || process.env.SMTP_USER || 'atendimento@oldkingcosmeticos.com.br');
     await EmailService.sendPaymentApprovedEmail(to, 'TESTE-12345');
     res.status(200).json({ 
       success: true, 

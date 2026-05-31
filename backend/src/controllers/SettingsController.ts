@@ -15,7 +15,7 @@ export class SettingsController {
             id: 1,
             phone: '(11) 99469-1444',
             whatsapp: '(11) 99469-1444',
-            email: 'contato@oldkingcosmeticos.com.br',
+            email: 'atendimento@oldkingcosmeticos.com.br',
             hours: 'seg a sex das 9h às 18h',
             description: 'A Old King Cosméticos fabrica produtos masculinos premium.',
             instagram: 'https://instagram.com/oldking',
