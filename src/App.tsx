@@ -828,6 +828,7 @@ const UsersView = ({ onBack }: { onBack: () => void }) => {
 
 const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
   const [step, setStep] = useState(1);
+  const [mpError, setMpError] = useState<string | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [pixData, setPixData] = useState<any>(null);
   const [ticketData, setTicketData] = useState<any>(null);
@@ -858,7 +859,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
     if (pixPaymentId && !paymentSuccess) {
       interval = setInterval(async () => {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/${pixPaymentId}/status`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/payments/${pixPaymentId}/status`);
           const data = await res.json();
           if (data.success && data.status === 'approved') {
             setPixData(null);
@@ -1057,6 +1058,11 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
               </div>
               
               <div className="bg-background border border-white/10 rounded-md p-2 min-h-[300px]">
+                {mpError && (
+                  <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded mb-4 text-sm">
+                    <strong>Erro no Mercado Pago:</strong> {mpError}
+                  </div>
+                )}
                 <Payment
                   initialization={{
                     amount: cartTotal,
@@ -1075,7 +1081,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                   }}
                   onSubmit={async (param) => {
                     try {
-                      const res = await fetch(import.meta.env.VITE_API_URL + '/api/checkout', {
+                      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/checkout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1101,18 +1107,20 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                           if (onSuccess) onSuccess();
                         }
                       } else {
-                        alert('Erro ao processar pagamento: ' + data.message);
+                        setMpError('Erro ao processar pagamento: ' + data.message);
                       }
-                    } catch (err) {
+                    } catch (err: any) {
                       console.error('Erro na requisição de pagamento:', err);
-                      alert('Erro ao processar pagamento no servidor.');
+                      setMpError('Erro ao processar pagamento no servidor: ' + err?.message);
                     }
                   }}
                   onError={(error) => {
                     console.error('Erro no Mercado Pago Brick:', error);
+                    setMpError(JSON.stringify(error));
                   }}
                   onReady={() => {
                     console.log('Payment Brick carregado e pronto');
+                    setMpError(null);
                   }}
                 />
               </div>
@@ -1157,7 +1165,7 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
               
               <a href={ticketData.transaction_details?.external_resource_url} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded font-bold transition-colors mb-4 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v8H6z"></path></svg>
-                Imprimir / Ver Boleto
+                Baixar Boleto
               </a>
               
               <p className="text-xs text-gray-500">O pagamento por boleto pode demorar até 2 dias úteis para ser compensado.</p>
