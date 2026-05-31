@@ -1135,13 +1135,6 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                   }}
                   onSubmit={async (param) => {
                     try {
-                      if (param.formData.payment_method_id !== 'pix' && param.formData.payment_method_id !== 'bolbradesco') {
-                        // Alert para debugar o que o Brick está passando
-                        if (!param.formData.token) {
-                          alert("ERRO NO BRICK: O componente não gerou o Token do Cartão! " + JSON.stringify(param.formData));
-                        }
-                      }
-
                       const res = await fetch((import.meta.env.VITE_API_URL || 'https://old-king-cosmeticos-loja.onrender.com') + '/api/checkout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1171,19 +1164,16 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
                             setMpError('O pagamento está em análise. Você receberá um e-mail quando for aprovado.');
                           } else {
                             const errorMsg = 'Pagamento ' + (data.paymentResponse.status_detail || data.paymentResponse.status) + ' - Verifique os dados do cartão e tente novamente.';
-                            alert(errorMsg);
                             setMpError(errorMsg);
                             throw new Error(errorMsg);
                           }
                         }
                       } else {
-                        alert('Erro ao processar pagamento: ' + data.message);
                         setMpError('Erro ao processar pagamento: ' + data.message);
                         throw new Error(data.message);
                       }
                     } catch (err: any) {
                       console.error('Erro na requisição de pagamento:', err);
-                      alert('Erro ao processar pagamento no servidor: ' + err?.message);
                       setMpError('Erro ao processar pagamento no servidor: ' + err?.message);
                       throw err;
                     }
