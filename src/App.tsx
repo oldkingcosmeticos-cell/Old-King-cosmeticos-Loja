@@ -1024,18 +1024,17 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess }: any) => {
                         </label>
                       ))}
                       
-                      {import.meta.env.DEV && (
-                        <label className={`flex items-center justify-between p-3 rounded border cursor-pointer transition-colors ${selectedShipping?.name === 'Frete Grátis (Teste)' ? 'border-purple-500 bg-purple-500/10' : 'border-purple-500/30 bg-background/50 hover:border-purple-500/50'}`}>
-                          <div className="flex items-center gap-3">
-                            <input type="radio" name="shipping" required checked={selectedShipping?.name === 'Frete Grátis (Teste)'} onChange={() => setSelectedShipping({ name: 'Frete Grátis (Teste)', price: 0, company: 'DEV', delivery_time: 1 })} className="accent-purple-500 w-4 h-4" />
-                            <div>
-                              <span className="text-purple-400 font-medium block">DEV Frete Grátis (Teste)</span>
-                              <span className="text-gray-400 text-xs">Apenas para homologação</span>
-                            </div>
+                      {/* Temp Free Shipping for PROD testing */}
+                      <label className={`flex items-center justify-between p-3 rounded border cursor-pointer transition-colors ${selectedShipping?.name === 'Frete Grátis (Teste)' ? 'border-purple-500 bg-purple-500/10' : 'border-purple-500/30 bg-background/50 hover:border-purple-500/50'}`}>
+                        <div className="flex items-center gap-3">
+                          <input type="radio" name="shipping" required checked={selectedShipping?.name === 'Frete Grátis (Teste)'} onChange={() => setSelectedShipping({ name: 'Frete Grátis (Teste)', price: 0, company: 'DEV', delivery_time: 1 })} className="accent-purple-500 w-4 h-4" />
+                          <div>
+                            <span className="text-purple-400 font-medium block">Frete Teste (R$ 0,00)</span>
+                            <span className="text-gray-400 text-xs">Para testar PIX/Cartão</span>
                           </div>
-                          <span className="text-purple-400 font-bold">R$ 0,00</span>
-                        </label>
-                      )}
+                        </div>
+                        <span className="text-purple-400 font-bold">R$ 0,00</span>
+                      </label>
                     </div>
                   </div>
                 )}
