@@ -910,8 +910,8 @@ const CheckoutView = ({ cart, onBack, onHome, user, onSuccess, isTestShippingEna
     return acc + (priceNum * item.quantity);
   }, 0);
 
-  const shippingPrice = selectedShipping ? parseFloat(String(selectedShipping.price).replace(',', '.')) : 0;
-  const cartTotal = subtotal + shippingPrice;
+  const shippingPrice = selectedShipping && selectedShipping.price ? Number(String(selectedShipping.price).replace(',', '.')) : 0;
+  const cartTotal = Number(subtotal) + (isNaN(shippingPrice) ? 0 : shippingPrice);
 
   const fetchCep = async (cep: string) => {
     const cleanCep = cep.replace(/\D/g, '');
