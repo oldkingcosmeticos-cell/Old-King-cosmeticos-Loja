@@ -309,10 +309,14 @@ const ProductDetailsView = ({ product, onBack, onAddToCart, isFavorite, onToggle
           return;
         }
         let resultString = '';
+        const productPrice = getUnitPrice(product, 1);
+        
         data.options.forEach((opt: any) => {
           // Formata o preço para BRL
-          const formattedPrice = opt.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-          resultString += `✅ ${opt.company} ${opt.name}: ${formattedPrice} (até ${opt.delivery_time} dias úteis)\n`;
+          const formattedShipping = Number(opt.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          const totalWithProduct = (productPrice + Number(opt.price)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          
+          resultString += `✅ ${opt.company || ''} ${opt.name}:\n   Frete: ${formattedShipping} | Total (Produto + Frete): ${totalWithProduct}\n   (Chega em até ${opt.delivery_time} dias úteis)\n\n`;
         });
         setFreteResult(resultString);
       } else {
