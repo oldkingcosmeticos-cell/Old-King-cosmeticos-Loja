@@ -16,7 +16,11 @@ export class PaymentController {
       // Porém, para cartões de crédito (que enviam 'token') isso pode causar falhas na API.
       const isCard = !!paymentData.token;
       const isPix = paymentData.payment_method_id === 'pix';
-      
+      if (paymentData.payer) {
+        // Altera o e-mail para impedir o Mercado Pago de enviar e-mails nativos ao cliente
+        paymentData.payer.email = 'noreply@oldkingcosmeticos.com.br';
+      }
+
       if (!isCard && !isPix && customer && paymentData.payer) {
         paymentData.payer.address = {
           zip_code: customer.cep ? customer.cep.replace(/\D/g, '') : '',
@@ -46,10 +50,17 @@ export class PaymentController {
         totalAmount = paymentData.transaction_amount;
       }
 
-      await prisma.order.create({
+      let orderStatus = 'pending';
+      if (paymentResponse.status === 'approved') {
+        orderStatus = 'approved';
+      } else if (paymentResponse.status === 'in_process') {
+        orderStatus = 'in_process';
+      }
+
+      const order = await prisma.order.create({
         data: {
           userId: userId || customer?.email || 'guest',
-          status: 'pending',
+          status: orderStatus,
           totalAmount: totalAmount,
           paymentMethod: paymentResponse.payment_method_id || 'pix',
           paymentId: String(paymentResponse.id),
@@ -58,10 +69,27 @@ export class PaymentController {
         }
       });
       
-      // Envia o e-mail com o QR Code se for PIX
-      if (paymentResponse.payment_method_id === 'pix' && customer?.email) {
-        // Envia de forma assíncrona para não travar a resposta da API
-        EmailService.sendPaymentPendingEmail(customer.email, paymentResponse.point_of_interaction?.transaction_data).catch(console.error);
+      const realEmail = customer?.email || userId;
+
+      if (orderStatus === 'approved') {
+        // Envia para Omie imediatamente
+        try {
+          await OmieService.registerOrder(order, customer || {}, items || []);
+          await OmieService.issueInvoice(order);
+        } catch (e) {
+          console.error("Erro Omie checkout imediato:", e);
+        }
+        if (realEmail) EmailService.sendPaymentApprovedEmail(realEmail, order.id).catch(console.error);
+      } else {
+        // Manda e-mail de aguardando pagamento
+        if (realEmail) {
+          if (paymentResponse.payment_method_id === 'pix') {
+            EmailService.sendPaymentPendingEmail(realEmail, paymentResponse.point_of_interaction?.transaction_data).catch(console.error);
+          } else {
+            // Pode ser um boleto ou cartão em análise. Se quiser enviar e-mail genérico de pendente, pode ser aqui.
+            // Para boleto, TicketData tem a URL.
+          }
+        }
       }
       
       res.status(200).json({ 
