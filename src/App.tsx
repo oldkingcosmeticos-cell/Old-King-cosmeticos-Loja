@@ -2322,10 +2322,11 @@ export default function App() {
           user={user}
           onSuccess={() => {
             setCart([]);
-            const savedUser = localStorage.getItem('oldking_user');
-            const u = savedUser ? JSON.parse(savedUser) : null;
-            const key = u ? `oldking_cart_${u.id}` : 'oldking_cart_guest';
-            localStorage.removeItem(key);
+            localStorage.removeItem('oldking_cart_guest');
+            localStorage.removeItem('oldking_cart_undefined');
+            if (user && user.id) {
+              localStorage.removeItem(`oldking_cart_${user.id}`);
+            }
           }}
         />
       ) : currentView === 'institutional' ? (
@@ -3112,7 +3113,7 @@ export default function App() {
           </button>
         )}
         <a 
-          href={`https://wa.me/${whatsappNumber}`}
+          href={`https://api.whatsapp.com/send?phone=${whatsappNumber}`}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 rounded-full shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:shadow-[0_0_25px_rgba(37,211,102,0.5)] transition-all hover:-translate-y-1 group relative flex items-center justify-center"
