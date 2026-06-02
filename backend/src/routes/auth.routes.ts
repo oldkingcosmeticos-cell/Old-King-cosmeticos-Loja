@@ -12,4 +12,7 @@ router.post('/register', AuthController.register);
 // Rota para fazer o login real
 router.post('/login', AuthController.login);
 
+// Rota para login com o Google
+router.post('/google', AuthController.googleLogin);
+
 export default router;

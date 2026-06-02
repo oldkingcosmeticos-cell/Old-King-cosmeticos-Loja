@@ -3,7 +3,7 @@ import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Ed
 import logo from './assets/logo-white.jpg';
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 import { FallingLeaves } from './FallingLeaves';
-
+import { GoogleLogin } from '@react-oauth/google';
 // Inicializa o Mercado Pago
 initMercadoPago('APP_USR-8bee8a49-cf18-4775-ad78-f1620b18bbfa');
 
@@ -1808,6 +1808,33 @@ export default function App() {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential })
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('oldking_token', data.token);
+        localStorage.setItem('oldking_user', JSON.stringify(data.user));
+        setUser(data.user);
+        setAuthMode(null);
+        setError('');
+      } else {
+        setError(data.error || 'Erro ao entrar com Google.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Erro de conexão com o servidor.');
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError('A autenticação com o Google falhou.');
+  };
+
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -2497,6 +2524,20 @@ export default function App() {
                   <p className="text-center text-sm text-gray-400 mt-4">
                     Já tem uma conta? <button type="button" onClick={() => {setAuthMode('login'); setError('');}} className="text-primary hover:underline transition-colors">Entrar</button>
                   </p>
+
+                  <div className="mt-6 border-t border-white/10 pt-6">
+                    <p className="text-center text-sm text-gray-400 mb-4">Ou continue com</p>
+                    <div className="flex justify-center">
+                      <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                        theme="filled_black"
+                        shape="rectangular"
+                        size="large"
+                        text="signup_with"
+                      />
+                    </div>
+                  </div>
                 </form>
               </>
             )}
@@ -2542,6 +2583,20 @@ export default function App() {
                   <p className="text-center text-sm text-gray-400 mt-4">
                     Ainda não tem conta? <button type="button" onClick={() => setAuthMode('register')} className="text-primary hover:underline transition-colors">Criar agora</button>
                   </p>
+
+                  <div className="mt-6 border-t border-white/10 pt-6">
+                    <p className="text-center text-sm text-gray-400 mb-4">Ou acesse com</p>
+                    <div className="flex justify-center">
+                      <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                        theme="filled_black"
+                        shape="rectangular"
+                        size="large"
+                        text="signin_with"
+                      />
+                    </div>
+                  </div>
                 </form>
               </>
             )}

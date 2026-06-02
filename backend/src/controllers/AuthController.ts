@@ -141,4 +141,66 @@ export class AuthController {
     }
   }
 
+  static async googleLogin(req: Request, res: Response) {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ error: 'Token do Google não fornecido.' });
+    }
+
+    try {
+      const { OAuth2Client } = require('google-auth-library');
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      
+      if (!payload || !payload.email) {
+        return res.status(400).json({ error: 'Token do Google inválido.' });
+      }
+
+      const email = payload.email.toLowerCase();
+      const name = payload.name || 'Usuário do Google';
+      const photo = payload.picture || '';
+
+      // Verifica se o usuário já existe
+      let user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user) {
+        // Se não existir, cria uma conta automaticamente com uma senha forte aleatória
+        const crypto = require('crypto');
+        const randomPassword = crypto.randomBytes(20).toString('hex');
+        const hashedPassword = await bcrypt.hash(randomPassword, 10);
+        const role = email === 'caioh0455@gmail.com' ? 'ADMIN' : 'CUSTOMER';
+
+        user = await prisma.user.create({
+          data: {
+            name,
+            email,
+            password: hashedPassword,
+            photo,
+            role,
+          }
+        });
+      }
+
+      // Gera o Token JWT da nossa aplicação
+      const jwtToken = jwt.sign(
+        { id: user.id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      return res.json({
+        success: true,
+        token: jwtToken,
+        user: { id: user.id, name: user.name, email: user.email, role: user.role, photo: user.photo }
+      });
+    } catch (err) {
+      console.error('Erro no login com Google:', err);
+      return res.status(500).json({ error: 'Falha na autenticação com o Google.' });
+    }
+  }
+
 }
