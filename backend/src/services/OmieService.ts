@@ -170,7 +170,32 @@ export class OmieService {
   }
 
   static async issueInvoice(order: any) {
-    console.log(`[OMIE] Pedido ${order.id} aguardando faturamento manual na Etapa 20.`);
-    return true;
+    console.log(`[OMIE] Iniciando faturamento automático (geração de NF) para o Pedido ${order.id}...`);
+    const app_key = process.env.OMIE_APP_KEY;
+    const app_secret = process.env.OMIE_APP_SECRET;
+
+    if (!app_key || !app_secret || app_key === '1234567890') {
+      console.warn("[OMIE] ⚠️ Chaves da Omie não configuradas. Simulação de Faturamento ignorada.");
+      return false;
+    }
+
+    try {
+      const payload = {
+        call: 'FaturarPedido',
+        app_key,
+        app_secret,
+        param: [{
+          codigo_pedido_integracao: String(order.id)
+        }]
+      };
+
+      const res = await axios.post('https://app.omie.com.br/api/v1/produtos/pedido/', payload);
+      console.log(`[OMIE] Sucesso! Pedido ${order.id} Faturado. Nota Fiscal está sendo gerada pela Omie.`, res.data);
+      return true;
+    } catch (error: any) {
+      console.error("[OMIE ERROR] Falha ao Faturar o Pedido na Omie:");
+      console.error(error.response?.data?.faultstring || error.message);
+      return false;
+    }
   }
 }
