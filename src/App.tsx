@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search, Check, Truck } from 'lucide-react';
-import logo from './assets/logo-white.png';
+import logo from './assets/logo-white.jpg';
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 import { FallingLeaves } from './FallingLeaves';
 
