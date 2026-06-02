@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search, Check, Truck } from 'lucide-react';
 import logo from './assets/671820305_17917652571349694_6608811899973837934_n (1).jpg';
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
+import { FallingLeaves } from './FallingLeaves';
 
 // Inicializa o Mercado Pago
 initMercadoPago('APP_USR-8bee8a49-cf18-4775-ad78-f1620b18bbfa');
@@ -1946,7 +1947,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen font-sans bg-background text-white">
+    <div className="min-h-screen font-sans bg-background text-white relative">
+      <FallingLeaves />
       {/* Navbar Mocks */}
       <nav className="w-full h-20 border-b border-white/5 bg-surface flex items-center justify-between px-4 md:px-8 xl:px-16 sticky top-0 z-50">
         <div className="flex items-center gap-4 xl:gap-6">
