@@ -1976,7 +1976,7 @@ export default function App() {
           <img 
             src={logo} 
             alt="Logo" 
-            className="h-10 md:h-12 w-auto object-contain mix-blend-screen opacity-90"
+            className="h-14 md:h-16 w-auto object-contain mix-blend-screen invert opacity-100"
           />
         </div>
 
