@@ -1551,7 +1551,10 @@ export default function App() {
   const [error, setError] = useState('');
 
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
-  const [whatsappNumber, setWhatsappNumber] = useState(() => localStorage.getItem('oldking_whatsapp') || '5511999999999');
+  const [whatsappNumber, setWhatsappNumber] = useState(() => {
+    const saved = localStorage.getItem('oldking_whatsapp');
+    return (saved && saved !== '5511999999999') ? saved : '5511994691444';
+  });
   const [isTestShippingEnabled, setIsTestShippingEnabled] = useState(() => localStorage.getItem('oldking_test_shipping') === 'true');
   const [productForm, setProductForm] = useState<{name: string, price: string, originalPrice: string, wholesalePrices: {quantity: string, price: string}[], sku: string, image: string, image2: string, tags: string[], listCategory: 'bestsellers' | 'newreleases'}>({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', tags: [], listCategory: 'newreleases' });
 
