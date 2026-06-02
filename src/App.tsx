@@ -222,7 +222,7 @@ const BannerCard = ({ banner, isAdmin, onEdit, onDelete, onClick }: { banner: an
   
   return (
     <div 
-      className="w-full max-w-full bg-surface aspect-video md:aspect-[21/9] lg:aspect-[2.5/1] rounded-sm overflow-hidden relative group/banner cursor-pointer border border-white/5 flex-shrink-0 snap-center"
+      className="w-full max-w-full bg-surface aspect-video rounded-sm overflow-hidden relative group/banner cursor-pointer border border-white/5 flex-shrink-0 snap-center"
       onClick={onClick}
       onMouseLeave={() => setShowMenu(false)}
     >
