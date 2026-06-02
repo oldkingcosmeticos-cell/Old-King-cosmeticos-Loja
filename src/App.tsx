@@ -222,7 +222,7 @@ const BannerCard = ({ banner, isAdmin, onEdit, onDelete, onClick }: { banner: an
   
   return (
     <div 
-      className="w-full max-w-full bg-surface aspect-video rounded-sm overflow-hidden relative group/banner cursor-pointer border border-white/5 flex-shrink-0 snap-center"
+      className="w-full max-w-[1000px] mx-auto bg-surface aspect-video rounded-sm overflow-hidden relative group/banner cursor-pointer border border-white/5 flex-shrink-0 snap-center"
       onClick={onClick}
       onMouseLeave={() => setShowMenu(false)}
     >
@@ -2120,7 +2120,7 @@ export default function App() {
           
           {/* Top Banners Mock */}
         <div className="relative group">
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:justify-center">
             {banners.map((banner: any) => (
               <BannerCard 
                 key={banner.id}
