@@ -28,12 +28,10 @@ export class ProductController {
 
   static async create(req: Request, res: Response) {
     try {
-      const { name, price, originalPrice, sku, image, image2, image3, image4, listCategory, tags, wholesalePrices } = req.body;
+      const { name, price, originalPrice, sku, image, image2, listCategory, tags, wholesalePrices } = req.body;
       
       const processedImage = await ImageService.processImage(image) || image;
       const processedImage2 = await ImageService.processImage(image2) || image2;
-      const processedImage3 = await ImageService.processImage(image3) || image3;
-      const processedImage4 = await ImageService.processImage(image4) || image4;
 
       const newProduct = await prisma.product.create({
         data: {
@@ -43,8 +41,6 @@ export class ProductController {
           sku,
           image: processedImage,
           image2: processedImage2,
-          image3: processedImage3,
-          image4: processedImage4,
           listCategory,
           tags: JSON.stringify(tags || []),
           wholesalePrices: JSON.stringify(wholesalePrices || [])
@@ -65,12 +61,10 @@ export class ProductController {
   static async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name, price, originalPrice, sku, image, image2, image3, image4, listCategory, tags, wholesalePrices } = req.body;
+      const { name, price, originalPrice, sku, image, image2, listCategory, tags, wholesalePrices } = req.body;
       
       const processedImage = await ImageService.processImage(image) || image;
       const processedImage2 = await ImageService.processImage(image2) || image2;
-      const processedImage3 = await ImageService.processImage(image3) || image3;
-      const processedImage4 = await ImageService.processImage(image4) || image4;
 
       const updated = await prisma.product.update({
         where: { id },
@@ -81,8 +75,6 @@ export class ProductController {
           sku,
           image: processedImage,
           image2: processedImage2,
-          image3: processedImage3,
-          image4: processedImage4,
           listCategory,
           tags: JSON.stringify(tags || []),
           wholesalePrices: JSON.stringify(wholesalePrices || [])

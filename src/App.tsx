@@ -287,9 +287,7 @@ const ProductDetailsView = ({ product, onBack, onAddToCart, isFavorite, onToggle
   // Array com a foto original e fotos de placeholder para indicar que mais podem ser adicionadas
   const gallery = [
     product.image,
-    product.image2 || 'https://placehold.co/600x600/111111/E9C176?text=FOTO+2',
-    product.image3 || 'https://placehold.co/600x600/111111/E9C176?text=FOTO+3',
-    product.image4 || 'https://placehold.co/600x600/111111/E9C176?text=FOTO+4'
+    product.image2 || 'https://placehold.co/600x600/111111/E9C176?text=FOTO+2'
   ];
 
   const handleCalculateFrete = async (e: React.FormEvent) => {
@@ -1554,7 +1552,7 @@ export default function App() {
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [whatsappNumber, setWhatsappNumber] = useState(() => localStorage.getItem('oldking_whatsapp') || '5511999999999');
   const [isTestShippingEnabled, setIsTestShippingEnabled] = useState(() => localStorage.getItem('oldking_test_shipping') === 'true');
-  const [productForm, setProductForm] = useState<{name: string, price: string, originalPrice: string, wholesalePrices: {quantity: string, price: string}[], sku: string, image: string, image2: string, image3: string, image4: string, tags: string[], listCategory: 'bestsellers' | 'newreleases'}>({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', image3: '', image4: '', tags: [], listCategory: 'newreleases' });
+  const [productForm, setProductForm] = useState<{name: string, price: string, originalPrice: string, wholesalePrices: {quantity: string, price: string}[], sku: string, image: string, image2: string, tags: string[], listCategory: 'bestsellers' | 'newreleases'}>({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', tags: [], listCategory: 'newreleases' });
 
   const [cart, setCart] = useState<{product: any, quantity: number}[]>(() => {
     const savedUser = localStorage.getItem('oldking_user');
@@ -2100,7 +2098,7 @@ export default function App() {
                   <button 
                     className="w-full text-left px-6 py-4 text-primary hover:text-white hover:bg-primary/20 transition-all text-base font-medium border-l-2 border-transparent hover:border-primary flex items-center gap-2"
                     onClick={() => {
-                      setProductForm({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', image3: '', image4: '', tags: [], listCategory: 'newreleases' });
+                      setProductForm({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', tags: [], listCategory: 'newreleases' });
                       setAuthMode('addProduct');
                       setIsMenuOpen(false);
                     }}
@@ -2180,7 +2178,7 @@ export default function App() {
                   isAdmin={isAdmin}
                   onEdit={(p) => {
                     setEditingProduct({...p, category: 'bestsellers'});
-                    setProductForm({ name: p.name, price: p.price, originalPrice: p.originalPrice || '', wholesalePrices: p.wholesalePrices || (p.wholesalePrice ? [{quantity: '1', price: p.wholesalePrice}] : []), sku: p.sku || '', image: p.image, image2: p.image2 || '', image3: p.image3 || '', image4: p.image4 || '', tags: p.tags || [], listCategory: 'bestsellers' });
+                    setProductForm({ name: p.name, price: p.price, originalPrice: p.originalPrice || '', wholesalePrices: p.wholesalePrices || (p.wholesalePrice ? [{quantity: '1', price: p.wholesalePrice}] : []), sku: p.sku || '', image: p.image, image2: p.image2 || '', tags: p.tags || [], listCategory: 'bestsellers' });
                     setAuthMode('editProduct');
                   }}
                   onBuy={(p) => {
@@ -2210,7 +2208,7 @@ export default function App() {
                   isAdmin={isAdmin}
                   onEdit={(p) => {
                     setEditingProduct({...p, category: 'newreleases'});
-                    setProductForm({ name: p.name, price: p.price, originalPrice: p.originalPrice || '', wholesalePrices: p.wholesalePrices || (p.wholesalePrice ? [{quantity: '1', price: p.wholesalePrice}] : []), sku: p.sku || '', image: p.image, image2: p.image2 || '', image3: p.image3 || '', image4: p.image4 || '', tags: p.tags || [], listCategory: 'newreleases' });
+                    setProductForm({ name: p.name, price: p.price, originalPrice: p.originalPrice || '', wholesalePrices: p.wholesalePrices || (p.wholesalePrice ? [{quantity: '1', price: p.wholesalePrice}] : []), sku: p.sku || '', image: p.image, image2: p.image2 || '', tags: p.tags || [], listCategory: 'newreleases' });
                     setAuthMode('editProduct');
                   }}
                   onBuy={(p) => {
@@ -2286,8 +2284,6 @@ export default function App() {
               sku: p.sku || '',
               image: p.image,
               image2: p.image2 || '',
-              image3: p.image3 || '',
-              image4: p.image4 || '',
               tags: p.tags || [],
               listCategory: isBestseller ? 'bestsellers' : 'newreleases'
             });
@@ -2317,8 +2313,6 @@ export default function App() {
               sku: p.sku || '',
               image: p.image,
               image2: p.image2 || '',
-              image3: p.image3 || '',
-              image4: p.image4 || '',
               tags: p.tags || [],
               listCategory: isBestseller ? 'bestsellers' : 'newreleases'
             });
@@ -2363,7 +2357,7 @@ export default function App() {
           onEdit={(p: any) => {
             const isBestseller = bestSellers.find((b: any) => b.id === p.id);
             setEditingProduct({...p, category: isBestseller ? 'bestsellers' : 'newreleases'});
-            setProductForm({ name: p.name, price: p.price, originalPrice: p.originalPrice || '', wholesalePrices: p.wholesalePrices || (p.wholesalePrice ? [{quantity: '1', price: p.wholesalePrice}] : []), sku: p.sku || '', image: p.image, image2: p.image2 || '', image3: p.image3 || '', image4: p.image4 || '', tags: p.tags || [], listCategory: isBestseller ? 'bestsellers' : 'newreleases' });
+            setProductForm({ name: p.name, price: p.price, originalPrice: p.originalPrice || '', wholesalePrices: p.wholesalePrices || (p.wholesalePrice ? [{quantity: '1', price: p.wholesalePrice}] : []), sku: p.sku || '', image: p.image, image2: p.image2 || '', tags: p.tags || [], listCategory: isBestseller ? 'bestsellers' : 'newreleases' });
             setAuthMode('editProduct');
           }}
           onDelete={(p: any) => handleDeleteProduct({...p, category: bestSellers.find((b: any) => b.id === p.id) ? 'bestsellers' : 'newreleases'})}
@@ -2768,26 +2762,6 @@ export default function App() {
                       className="w-full bg-background/50 border border-white/10 rounded-md px-3.5 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 focus:bg-background transition-all" 
                     />
                     {productForm.image2 && <div className="mt-2 text-xs text-green-400">Imagem 2 atual carregada</div>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1.5">Imagem 3 (Opcional)</label>
-                    <input 
-                      type="file" 
-                      accept="image/*"
-                      onChange={e => handleImageUpload(e, 'image3')}
-                      className="w-full bg-background/50 border border-white/10 rounded-md px-3.5 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 focus:bg-background transition-all" 
-                    />
-                    {productForm.image3 && <div className="mt-2 text-xs text-green-400">Imagem 3 atual carregada</div>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1.5">Imagem 4 (Opcional)</label>
-                    <input 
-                      type="file" 
-                      accept="image/*"
-                      onChange={e => handleImageUpload(e, 'image4')}
-                      className="w-full bg-background/50 border border-white/10 rounded-md px-3.5 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 focus:bg-background transition-all" 
-                    />
-                    {productForm.image4 && <div className="mt-2 text-xs text-green-400">Imagem 4 atual carregada</div>}
                   </div>
                   
                   <button 
