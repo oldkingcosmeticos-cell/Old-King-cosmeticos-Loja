@@ -80,13 +80,31 @@ export class EmailService {
     const transporter = await this.getTransporter();
 
     const html = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-        <h2 style="color: #E9C176; text-align: center;">Old King Cosméticos</h2>
-        <h3 style="text-align: center; color: #4CAF50;">Pagamento Confirmado!</h3>
-        <p>Temos ótimas notícias! O pagamento do seu pedido (ID: ${orderId}) foi aprovado.</p>
-        <p>Nossa equipe já está separando os seus produtos. Em breve você receberá a Nota Fiscal e o código de rastreamento.</p>
-        <br/>
-        <p style="text-align: center; font-weight: bold;">Obrigado por escolher a Old King!</p>
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #131313; color: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #333;">
+        <div style="background-color: #000; padding: 30px; text-align: center; border-bottom: 2px solid #E9C176;">
+          <h1 style="color: #E9C176; margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 2px;">Old King</h1>
+          <p style="color: #888; margin-top: 5px; font-size: 14px;">Cosméticos</p>
+        </div>
+        
+        <div style="padding: 40px 30px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <div style="background-color: #E9C176; color: #000; width: 60px; height: 60px; border-radius: 50%; display: inline-block; line-height: 60px; font-size: 30px; font-weight: bold;">✓</div>
+            <h2 style="color: #E9C176; margin-top: 20px; font-size: 24px;">PAGAMENTO APROVADO!</h2>
+          </div>
+          
+          <p style="font-size: 16px; line-height: 1.6; color: #ddd;">Temos ótimas notícias! O pagamento do seu pedido <strong>#${orderId}</strong> foi processado e aprovado com sucesso.</p>
+          
+          <div style="background-color: #1f1f1f; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #E9C176;">
+            <p style="margin: 0; font-size: 15px; color: #ccc;"><strong>O que acontece agora?</strong></p>
+            <p style="margin: 10px 0 0 0; font-size: 14px; color: #aaa; line-height: 1.5;">Nossa equipe já está separando os seus produtos com todo o cuidado. A sua <strong>Nota Fiscal</strong> está sendo gerada pelo nosso sistema e você receberá ela em um e-mail separado muito em breve, junto com o código de rastreio!</p>
+          </div>
+          
+          <p style="font-size: 15px; text-align: center; margin-top: 40px; color: #888;">Obrigado por escolher a excelência da Old King.</p>
+        </div>
+        
+        <div style="background-color: #0a0a0a; padding: 20px; text-align: center; font-size: 12px; color: #666;">
+          © ${new Date().getFullYear()} Old King Cosméticos. Todos os direitos reservados.
+        </div>
       </div>
     `;
 
