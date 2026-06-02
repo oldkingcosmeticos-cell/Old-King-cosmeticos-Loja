@@ -3161,18 +3161,16 @@ export default function App() {
             </button>
           </>
         )}
-        <a 
-          href={`https://wa.me/${whatsappNumber}?text=Olá,%20gostaria%20de%20tirar%20uma%20dúvida!`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 rounded-full shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:shadow-[0_0_25px_rgba(37,211,102,0.5)] transition-all hover:-translate-y-1 group relative flex items-center justify-center cursor-pointer"
+        <button 
+          onClick={() => window.open(`https://wa.me/${whatsappNumber}?text=Olá,%20gostaria%20de%20tirar%20uma%20dúvida!`, '_blank')}
+          className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 rounded-full shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:shadow-[0_0_25px_rgba(37,211,102,0.5)] transition-all hover:-translate-y-1 group relative flex items-center justify-center cursor-pointer relative z-[100]"
           title="Fale conosco no WhatsApp"
         >
           <WhatsAppIcon size={28} className="group-hover:scale-110 transition-transform" />
-          <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-black px-3 py-1.5 rounded text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+          <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-black px-3 py-1.5 rounded text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap hidden md:block">
             Fale conosco
           </span>
-        </a>
+        </button>
       </div>
     </div>
   );
