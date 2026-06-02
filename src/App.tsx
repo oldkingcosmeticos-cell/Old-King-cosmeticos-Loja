@@ -10,8 +10,8 @@ initMercadoPago('APP_USR-8bee8a49-cf18-4775-ad78-f1620b18bbfa');
 // Constants removidas para o backend
 
 const INITIAL_FOOTER_CONFIG = {
-  phone: '(11) 99469-1444',
-  whatsapp: '(11) 99469-1444',
+  phone: '(11) 98848-7201',
+  whatsapp: '(11) 98848-7201',
   email: 'atendimento@oldkingcosmeticos.com.br',
   hours: 'seg a sex das 9h às 18h',
   description: 'A Old King Cosméticos fabrica produtos masculinos premium para Barba, Cabelo e Bigode.',
@@ -1553,7 +1553,7 @@ export default function App() {
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [whatsappNumber, setWhatsappNumber] = useState(() => {
     const saved = localStorage.getItem('oldking_whatsapp');
-    return (saved && saved !== '5511999999999') ? saved : '5511994691444';
+    return (saved && saved !== '5511999999999' && saved !== '5511994691444') ? saved : '5511988487201';
   });
   const [isTestShippingEnabled, setIsTestShippingEnabled] = useState(() => localStorage.getItem('oldking_test_shipping') === 'true');
   const [productForm, setProductForm] = useState<{name: string, price: string, originalPrice: string, wholesalePrices: {quantity: string, price: string}[], sku: string, image: string, image2: string, tags: string[], listCategory: 'bestsellers' | 'newreleases'}>({ name: '', price: '', originalPrice: '', wholesalePrices: [], sku: '', image: '', image2: '', tags: [], listCategory: 'newreleases' });
