@@ -151,7 +151,7 @@ export class OmieService {
           },
           informacoes_adicionais: {
             codigo_categoria: "1.01.01", // Receita de Vendas de Produtos
-            codigo_conta_corrente: 10404148227 // Omie.CASH
+            codigo_conta_corrente: 10361245289 // Old King Cosmeticos (Conta Ativa)
           }
         }]
       };
@@ -181,11 +181,12 @@ export class OmieService {
 
     try {
       const payload = {
-        call: 'FaturarPedido',
+        call: 'TrocarEtapaPedido',
         app_key,
         app_secret,
         param: [{
-          codigo_pedido_integracao: String(order.id)
+          codigo_pedido_integracao: String(order.id),
+          etapa: "50" // Faturar
         }]
       };
 
