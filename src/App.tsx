@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, ShoppingBag, Star, ChevronLeft, ChevronRight, User, X, LogOut, Edit2, MoreVertical, Heart, Minus, Plus, Trash2, MessageCircle, Phone, Mail, Clock, Instagram, Facebook, ShieldCheck, Search, Check, Truck } from 'lucide-react';
-import logo from './assets/671820305_17917652571349694_6608811899973837934_n (1).jpg';
+import logo from './assets/logo-white.png';
 import { initMercadoPago, Payment } from '@mercadopago/sdk-react';
 import { FallingLeaves } from './FallingLeaves';
 
@@ -1361,7 +1361,7 @@ const Footer = ({ config, isAdmin, onEdit, onInstitutionalClick, onCategoryClick
             className="mt-4 bg-white/5 border border-white/10 rounded p-4 flex items-center gap-3 w-fit cursor-pointer hover:border-primary/50 transition-colors"
             onClick={() => window.open(config.facebook, '_blank')}
           >
-             <img src={logo} className="w-10 h-10 rounded-full object-cover border border-primary/20" />
+             <img src={logo} className="w-10 h-10 rounded-full object-cover border border-primary/20 mix-blend-screen" />
              <div className="flex flex-col pr-2">
                <span className="text-white text-sm font-bold">Old King</span>
                <span className="text-gray-500 text-xs flex items-center gap-1"><Facebook size={10} className="fill-blue-500 text-blue-500" /> Seguir Página</span>
@@ -1373,7 +1373,7 @@ const Footer = ({ config, isAdmin, onEdit, onInstitutionalClick, onCategoryClick
       {/* Bottom Section */}
       <div className="pt-8 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         <div className="flex flex-col gap-4">
-          <img src={logo} alt="Old King Logo" className="w-16 h-16 rounded object-cover border border-white/10" />
+          <img src={logo} alt="Old King Logo" className="w-16 h-16 rounded object-cover border border-white/10 mix-blend-screen" />
           <p className="text-gray-500 text-xs leading-relaxed text-justify">
             {config.description}
           </p>
@@ -1976,7 +1976,7 @@ export default function App() {
           <img 
             src={logo} 
             alt="Logo" 
-            className="h-14 md:h-16 w-auto object-contain mix-blend-screen invert opacity-100"
+            className="h-14 md:h-16 w-auto object-contain mix-blend-screen opacity-100"
           />
         </div>
 
